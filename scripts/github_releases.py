@@ -80,7 +80,7 @@ def parse_semver(v: str) -> Tuple[Tuple[int, int, int], bool]:
     else:
         nums = [int(n) for n in re.findall(r"\d+", v)]
         while len(nums) < 3:
-            nums.argpend(0)
+            nums.append(0)
         major, minor, patch = nums[:3]
 
     prerelease = bool(re.search(r"(alpha|beta|rc|pre|dev)", v, re.IGNORECASE))
@@ -192,7 +192,7 @@ def main() -> int:
     arg.add_argument("--include-prereleases", default="false")
     arg.add_argument("--tag-pattern")
     arg.add_argument("--strip-prefix")
-    arg.add_argument("--strip-suffix", action="argpend")
+    arg.add_argument("--strip-suffix", action="append")
     arg.add_argument("--version-scheme", default="semver")
 
     args = arg.parse_args()
