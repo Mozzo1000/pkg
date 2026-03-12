@@ -4,7 +4,7 @@ platforms:
 - windows
 - macos
 - linux
-current_version: v2.0.14
+current_version: v2.0.15
 update_source:
   type: github_releases
   owner: syncthing
