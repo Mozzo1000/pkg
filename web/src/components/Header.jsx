@@ -49,6 +49,7 @@ export function Header() {
 				<div className="flex items-center gap-2 lg:gap-4">
 					<a
 						href="/feed.xml"
+						target="_blank"
 						title="RSS Feed"
 						className="p-2 rounded-lg text-zinc-500 hover:bg-orange-50 hover:text-orange-600 dark:text-zinc-400 dark:hover:bg-orange-950/30 dark:hover:text-orange-400 transition-colors">
 						<Rss size={20} />
