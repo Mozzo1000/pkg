@@ -22,14 +22,6 @@ jobs:
       - name: Install Python dependencies
         run: pip install pyyaml
 
-      - name: Generate Data and Feed
-        working-directory: .
-        run: |
-          python scripts/generate_json.py --apps-dir applications --out web/public/data.json
-          python scripts/build_feed.py --apps-dir applications --out web/public/feed.xml \
-            --site-url "pkg.rewake.org" \
-            --feed-title "PKG Updates"
-
       - uses: actions/setup-node@v4
         with:
           node-version: 24
@@ -40,6 +32,14 @@ jobs:
         run: npm ci
       - name: Build website
         run: npm run build
+
+      - name: Generate Data and Feed
+        working-directory: . 
+        run: |
+          python scripts/generate_json.py --apps-dir applications --out web/dist/data.json --pretty
+          python scripts/build_feed.py --apps-dir applications --out web/dist/feed.xml \
+            --site-url "https://pkg.rewake.org" \
+            --feed-title "PKG Updates"
 
       - name: Upload Build Artifact
         uses: actions/upload-pages-artifact@v3
