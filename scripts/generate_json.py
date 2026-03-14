@@ -1,39 +1,12 @@
 #!/usr/bin/env python3
-"""
-List applications and versions as JSON, including metadata.
-
-Output structure:
-[
-  {
-    "name": "Pangolin",
-    "current_version": "1.4.2",
-    "file": "pangolin.yml",
-    "metadata": { ... },        # copied as-is from YAML (or {})
-  },
-  ...
-]
-
-Usage:
-  python scripts/list_apps_json.py --apps-dir applications
-  python scripts/list_apps_json.py --apps-dir applications --pretty
-  python scripts/list_apps_json.py --apps-dir applications --out docs/index.json --pretty
-  python scripts/list_apps_json.py --apps-dir applications --sort-by name --pretty
-  python scripts/list_apps_json.py --apps-dir applications --include-missing
-
-Notes:
-- 'current_version' is taken verbatim (vendor string).
-- Files without 'current_version' are skipped unless --include-missing.
-- 'metadata' are included as-is ({} if not present).
-"""
-
 import argparse
 import json
 import sys
 from pathlib import Path
 from typing import Any, Dict, List, Optional
+import datetime
 
 import yaml
-
 
 def load_yaml(path: Path) -> Optional[Dict[str, Any]]:
     try:
@@ -44,7 +17,6 @@ def load_yaml(path: Path) -> Optional[Dict[str, Any]]:
         print(f"WARNING: Failed to parse {path.name}: {e}", file=sys.stderr)
         return None
 
-
 def collect_apps(apps_dir: Path, include_missing: bool) -> List[Dict[str, Any]]:
     items: List[Dict[str, Any]] = []
     for fp in sorted(apps_dir.glob("*.y*ml")):
@@ -53,43 +25,55 @@ def collect_apps(apps_dir: Path, include_missing: bool) -> List[Dict[str, Any]]:
             continue
 
         name = str(y.get("name") or fp.stem).strip()
-        version = str(y.get("current_version") or "").strip()
+        
+        # Extract the release block
+        release_info = y.get("release") if isinstance(y.get("release"), dict) else {}
+        version = str(release_info.get("latest_version") or "").strip()
 
         if not version and not include_missing:
             continue
 
+        # Handle Date serialization
+        released_on = release_info.get("released_on")
+        if isinstance(released_on, (datetime.date, datetime.datetime)):
+            released_on_str = released_on.isoformat()
+        else:
+            released_on_str = str(released_on or "")
+
+        # Handle Metadata
         metadata = y.get("metadata") if isinstance(y.get("metadata"), dict) else {}
+
+        # Get the notes URL - priority to specific release notes, fallback to general notes
+        notes_url = release_info.get("notes_url") or metadata.get("release_notes", "")
 
         items.append({
             "name": name,
-            "current_version": version,
+            "latest_version": version,
+            "released_on": released_on_str,
+            "release_notes": notes_url,
             "metadata": metadata,
+            "security": release_info.get("security", False),
+            "breaking": release_info.get("breaking", False)
         })
     return items
 
-
 def main() -> int:
-    ap = argparse.ArgumentParser(
-        description="Output a JSON list of applications, versions, metadata, and update_source."
-    )
-    ap.add_argument("--apps-dir", required=True, help="Directory containing application YAML files.")
-    ap.add_argument("--out", help="Write JSON to this file instead of stdout.")
+    ap = argparse.ArgumentParser(description="Output a JSON list of apps from the YAML spec.")
+    ap.add_argument("--apps-dir", required=True, help="Directory containing YAML files.")
+    ap.add_argument("--out", help="Write JSON to this file.")
     ap.add_argument("--pretty", action="store_true", help="Pretty-print JSON.")
-    ap.add_argument("--include-missing", action="store_true",
-                    help="Include apps missing current_version (as empty string).")
-    ap.add_argument("--sort-by", choices=["name", "current_version", "file"],
-                    help="Sort output by a field.")
+    ap.add_argument("--include-missing", action="store_true", help="Include apps missing version.")
+    ap.add_argument("--sort-by", choices=["name", "current_version"], help="Sort output.")
     args = ap.parse_args()
 
     apps_dir = Path(args.apps_dir)
     if not apps_dir.is_dir():
-        print(f"ERROR: apps-dir not found or not a directory: {apps_dir}", file=sys.stderr)
+        print(f"ERROR: apps-dir not found: {apps_dir}", file=sys.stderr)
         return 2
 
-    items = collect_apps(apps_dir, include_missing=args.include_missing if hasattr(args, 'include_missing') else args.include_missing)
+    items = collect_apps(apps_dir, include_missing=args.include_missing)
 
     if args.sort_by:
-        # Sort case-insensitively for strings
         items.sort(key=lambda x: (x.get(args.sort_by) or "").lower())
 
     indent = 2 if args.pretty else None

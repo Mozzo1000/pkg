@@ -50,11 +50,10 @@ def load_app(filepath: Path) -> Optional[dict]:
 
 
 def get_release_notes_link(data: dict) -> str:
-    md = data.get("metadata")
-    if isinstance(md, dict):
-        rn = (md.get("release_notes") or "").strip()
-        if rn:
-            return rn
+    if data["release"].get("notes_url"):
+        return data["release"].get("notes_url")
+    elif data["metadata"].get("release_notes"):
+        return data["metadata"].get("release_notes")
     return ""
 
 
@@ -74,7 +73,7 @@ def build_item_tuple(filepath: Path) -> Optional[Tuple[str, str, str, str, str]]
         return None
 
     name = str(data.get("name") or filepath.stem).strip()
-    current_version = str(data.get("current_version") or "").strip()
+    current_version = str(data["release"].get("latest_version") or "").strip()
     if not current_version:
         return None
 
@@ -84,7 +83,7 @@ def build_item_tuple(filepath: Path) -> Optional[Tuple[str, str, str, str, str]]
     guid_raw = f"{name}:{current_version}".encode("utf-8")
     guid = hashlib.sha1(guid_raw).hexdigest()
 
-    mtime = dt.datetime.fromtimestamp(filepath.stat().st_mtime,tz=dt.timezone.utc)
+    mtime = dt.datetime.combine(data["release"].get("released_on"), dt.time.min, tzinfo=dt.timezone.utc)
     pub_date = iso_to_rfc2822(mtime)
 
     # Minimal description — no homepage or extra links
