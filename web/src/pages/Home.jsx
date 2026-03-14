@@ -1,9 +1,15 @@
-import React from 'react'
+import { Features } from '../components/Features';
+import { Footer } from '../components/Footer';
+import { Hero } from '../components/Hero';
+import { ProblemSolution } from '../components/ProblemSolution';
 
-function Home() {
+export function Home() {
   return (
-    <div>Home</div>
-  )
+    <main>
+      <Hero />
+      <Features />
+      <ProblemSolution />
+      <Footer />
+    </main>
+  );
 }
-
-export default Home

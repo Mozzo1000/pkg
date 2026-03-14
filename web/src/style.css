@@ -1,1 +1,19 @@
 @import "tailwindcss";
+
+@layer utilities {
+  @keyframes signal-flow {
+    0% {
+      opacity: 0;
+      transform: translateY(-15px) scale(0.95);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  /* Target the list container to animate layout shifts */
+  .animate-signal-flow {
+    animation: signal-flow 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+}
