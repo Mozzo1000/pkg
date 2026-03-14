@@ -1,0 +1,4 @@
+<?xml version='1.0' encoding='utf-8'?>
+<rss version="2.0"><channel><title>PKG Updates</title><link>https://rewake.org</link><description>Latest upstream versions detected.</description><lastBuildDate>Sat, 14 Mar 2026 16:26:38 GMT</lastBuildDate><language>en</language><item><title>Syncthing v2.0.15</title><link>https://github.com/syncthing/syncthing/releases/tag/v2.0.15</link><guid isPermaLink="false">1c271994080b9556483ecd0443bade92ead9eabb</guid><pubDate>Tue, 03 Mar 2026 00:00:00 GMT</pubDate><description>Application: Syncthing
+Version: v2.0.15</description></item><item><title>Panoglin 1.16.0</title><link>https://github.com/fosrl/pangolin/releases/tag/1.16.0</link><guid isPermaLink="false">b51d120a4538c51e00bbf253d03eeed2174b1a51</guid><pubDate>Fri, 27 Feb 2026 00:00:00 GMT</pubDate><description>Application: Panoglin
+Version: 1.16.0</description></item></channel></rss>
