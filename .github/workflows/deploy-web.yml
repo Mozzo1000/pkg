@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./web
+        working-directory: .
     steps:
       - uses: actions/checkout@v4
         with:
@@ -21,10 +21,32 @@ jobs:
           cache: npm
           cache-dependency-path: ./web/package-lock.json
 
-      - name: Install dependencies
-        run: npm ci
-      - name: Build website
-        run: npm run build
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Python Dependencies
+        run: pip install PyYAML
+
+      - name: Build Preact Site
+        run: |
+          cd web
+          npm ci
+          npm run build
+
+      - name: Generate feeds
+        run: |          
+          python scripts/build_feed.py \
+            --apps-dir applications \
+            --out web/dist/feed.xml \
+            --site-url "https://pkg.rewake.org" \
+            --feed-title "Application Updates"
+            
+          python scripts/generate_json.py \
+            --apps-dir applications \
+            --out web/dist/apps.json \
+            --pretty
 
       - name: Upload Build Artifact
         uses: actions/upload-pages-artifact@v3
