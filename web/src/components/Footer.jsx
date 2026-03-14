@@ -49,7 +49,7 @@ export function Footer() {
                 </a>
               </li>
               <li>
-                <a href="/feed.xml" className="flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+                <a href="/feed.xml" target="_blank" className="flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
                   <Rss size={18} /> RSS Feed
                 </a>
               </li>

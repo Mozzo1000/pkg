@@ -26,7 +26,7 @@ export function Hero() {
                     Browse applications
                 </Button>
                 
-                <Button href="/feed.xml" variant="secondary" icon={Rss}>
+                <Button href="/feed.xml" target="_blank" variant="secondary" icon={Rss}>
                     Subscribe to RSS Feed
                 </Button>
             </div>
