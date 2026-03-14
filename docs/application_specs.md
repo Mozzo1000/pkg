@@ -37,6 +37,7 @@ versioning:
 
 release:
   latest_version: <string>        # required if platforms not used (vendor string)
+  released_on: <date>             # optional, ISO 8601 date (YYYY-MM-DD) when the release was published upstream
   breaking: <bool>                # optional, marks breaking-change release
   security: <bool>                # optional, marks security-relevant release
   notes_url: <uri>                # optional, per-release notes link (preferred over metadata.release_notes)
@@ -44,6 +45,7 @@ release:
   platforms:                      # optional, use when versions differ per OS
     windows|macos|linux:
       latest_version: <string>    # required per platform if versions diverge
+      released_on: <date>          # optional, overrides global release date for this platform
       breaking: <bool>            # optional override for this platform
       security: <bool>            # optional override for this platform
       notes_url: <uri>            # optional per-platform notes link
@@ -51,6 +53,7 @@ release:
       architectures:              # optional, only if arch differs under platform
         x64|arm64|x86|...:
           latest_version: <string>  # required per architecture if diverging
+          released_on: <date>        # optional, overrides platform/global release date for this architecture
           breaking: <bool>          # optional override for this architecture
           security: <bool>          # optional override for this architecture
           notes_url: <uri>          # optional per-arch notes link
@@ -98,6 +101,7 @@ The current, human‑curated snapshot of the latest known release for this appli
 #### Fields
 
 *   **`latest_version`**: Vendor version string for the latest release. **Required if `platforms` is not provided.**
+*    **`released_on`**: Date the release was published upstream, in **ISO 8601 format (`YYYY-MM-DD`)**. Optional but recommended.
 *   **`breaking`**: Boolean flag indicating a release with breaking changes (e.g., major version bump or compatibility changes).
 *   **`security`**: Boolean flag indicating a security‑relevant release (e.g., fixes CVEs).
 *   **`notes_url`**: URL to release‑specific notes/changelog. **Preferred for RSS link** over `metadata.release_notes` when present.
@@ -139,6 +143,7 @@ versioning:
 
 release:
   latest_version: "v3.2.1"
+  released_on: "2026-02-18"
   breaking: false
   security: true
   notes_url: https://github.com/acme/app/releases/tag/v3.2.1
@@ -171,11 +176,14 @@ release:
   platforms:
     windows:
       latest_version: "v1.26.1"
+      released_on: "2026-02-10"
       architectures:
         x64:
           latest_version: "v1.26.1"
+          released_on: "2026-02-10"
         arm64:
           latest_version: "v1.26.1"
+          released_on: "2026-02-10"
 
     macos:
       latest_version: "v1.26.0"
