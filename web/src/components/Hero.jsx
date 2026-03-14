@@ -1,4 +1,4 @@
-import { Rss, Database, Workflow, BellOff, ArrowRight } from 'lucide-preact';
+import { Rss, Database } from 'lucide-preact';
 
 import { Button } from './Button';
 import { LiveSignalFeed } from './LiveSignalFeed';
