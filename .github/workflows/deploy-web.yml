@@ -14,6 +14,22 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+      
+      - name: Install Python dependencies
+        run: pip install pyyaml
+
+      - name: Generate Data and Feed
+        run: |
+          python scripts/generate_json.py --apps-dir applications --out web/public/data.json
+          python scripts/build_feed.py --apps-dir applications --out web/public/feed.xml \
+            --site-url "pkg.rewake.org" \
+            --feed-title "PKG Updates"
+
       - uses: actions/setup-node@v4
         with:
           node-version: 24
