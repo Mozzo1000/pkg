@@ -159,9 +159,13 @@ def create_pr_for_app(app: AppDef, new_tag: str, ctx: Dict, base_branch: str) ->
     Update a single app file and create a PR with a dedicated branch.
     """
     branch = f"automation/update/{app.slug}/{new_tag}"
+    if pr_exists(branch):
+        info(f"PR already exists ({branch}), skipping.")
+        return 0
+
     info(f"Preparing PR for {app.name}: {app.current_version} → {new_tag} on {branch}")
 
-    # 1) Create/update branch from base
+    # 1) Create branch from base
     checkout_fresh_branch(base_branch, branch)
 
     # 2) Update YAML file
@@ -178,7 +182,7 @@ def create_pr_for_app(app: AppDef, new_tag: str, ctx: Dict, base_branch: str) ->
     # 4) Push branch
     push_branch(branch)
 
-    # 5) Create PR if not exists
+    # 5) Create PR
     pr_body = [
         f"Automated detection of a new upstream version for **{app.name}**.",
         "",
@@ -190,17 +194,6 @@ def create_pr_for_app(app: AppDef, new_tag: str, ctx: Dict, base_branch: str) ->
         "",
         f"Detection details: {ctx.get('reason', '')}",
     ]
-    if pr_exists(branch):
-        info(f"PR already exists for {branch}, skipping creation.")
-        # Optionally update the PR body with new details:
-        try:
-            pr_view = run(["gh", "pr", "view", "--head", branch, "--json", "url"])
-            pr_url = json.loads(pr_view.stdout).get("url")
-            if pr_url:
-                run(["gh", "pr", "edit", pr_url, "--body", "\n".join(pr_body)], check=False)
-        except Exception as e:
-            warn(f"Could not update existing PR body for {branch}: {e}")
-        return
 
     # Create new PR
     try:
