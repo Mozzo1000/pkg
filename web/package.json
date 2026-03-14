@@ -4,6 +4,7 @@
 	"scripts": {
 		"dev": "vite",
 		"build": "vite build",
+		"postbuild": "rm -rf dist/feed.xml/",
 		"preview": "vite preview"
 	},
 	"dependencies": {
