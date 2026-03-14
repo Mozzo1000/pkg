@@ -34,7 +34,7 @@ export function ProblemSolution() {
       },
       solution: {
         title: "Everyone gets the same visibility",
-        desc: "Notifications via RSS, webhooks, or email ensure consistent awareness across all stakeholders.",
+        desc: "Notifications via RSS, or email ensure consistent awareness across all stakeholders.",
         icon: Users
       }
     }

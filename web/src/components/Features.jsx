@@ -1,4 +1,4 @@
-import { Layers, Activity, Rss } from 'lucide-preact';
+import { Layers, Activity, Bell } from 'lucide-preact';
 
 export function Features() {
   const features = [
@@ -13,9 +13,9 @@ export function Features() {
       icon: Activity
     },
     {
-      title: "RSS Feed available",
-      description: "Subscribe to the global stream or specific application categories to trigger your internal workflows.",
-      icon: Rss
+      title: "Alerts & RSS Feeds",
+      description: "Get email notifications for your favorite apps or use our global RSS stream to trigger internal workflows.",
+      icon: Bell
     }
   ];
 
