@@ -27,6 +27,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, List
 import yaml
+from datetime import datetime
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 APPS_DIR = REPO_ROOT / "applications"
@@ -102,9 +103,9 @@ class AppDef:
     file_path: Path
     name: str
     slug: str
-    current_version: str
     src: Dict
     versioning: Dict
+    release: Dict
 
 def load_app_defs() -> List[AppDef]:
     apps: List[AppDef] = []
@@ -121,9 +122,9 @@ def load_app_defs() -> List[AppDef]:
                 file_path=path,
                 name=name,
                 slug=slugify(name),
-                current_version=data.get("current_version", "").strip(),
                 src=src,
                 versioning=data.get("versioning", {}) or {},
+                release=data.get("release", {}) or {}
             )
         )
     return apps
@@ -134,7 +135,7 @@ def run_checker(app: AppDef) -> Dict:
         sys.executable, str(CHECKER),
         "--owner", app.src["owner"],
         "--repo", app.src["repo"],
-        "--current-version", app.current_version,
+        "--current-version", app.release.get("latest_version"),
         "--version-scheme", app.versioning.get("scheme", "semver"),
     ]
     if app.src.get("include_prereleases"):
@@ -163,14 +164,16 @@ def create_pr_for_app(app: AppDef, new_tag: str, ctx: Dict, base_branch: str) ->
         info(f"PR already exists ({branch}), skipping.")
         return 0
 
-    info(f"Preparing PR for {app.name}: {app.current_version} → {new_tag} on {branch}")
+    info(f"Creating PR for {app.name}: {app.release.get("latest_version")} → {new_tag} on {branch}")
 
     # 1) Create branch from base
     checkout_fresh_branch(base_branch, branch)
 
     # 2) Update YAML file
     data = load_yaml(app.file_path)
-    data["current_version"] = new_tag
+    data["release"]["latest_version"] = new_tag
+    data["release"]["released_on"] = datetime.fromisoformat(str(ctx.get('published_at', '')).split("T")[0]).date()
+    data["release"]["notes_url"] = ctx.get('release_notes_url', '')
     save_yaml(app.file_path, data)
 
     # 3) Commit
@@ -186,7 +189,7 @@ def create_pr_for_app(app: AppDef, new_tag: str, ctx: Dict, base_branch: str) ->
     pr_body = [
         f"Automated detection of a new upstream version for **{app.name}**.",
         "",
-        f"- Old version: `{app.current_version}`",
+        f"- Old version: `{app.release.get("latest_version")}`",
         f"- New version: `{new_tag}`",
         f"- Source: `{ctx.get('source', '')}`",
         f"- Published at: `{ctx.get('published_at', '')}`",
