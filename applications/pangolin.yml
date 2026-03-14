@@ -1,9 +1,11 @@
-name: Pangolin
+name: Panoglin
 vendor: fosrl
 platforms:
 - linux
 
-current_version: 1.16.0
+metadata:
+  homepage: https://example.com/app
+  release_notes: https://github.com/acme/app/releases
 
 update_source:
   type: github_releases
@@ -15,6 +17,9 @@ update_source:
 versioning:
   scheme: semver
 
-metadata:
-  homepage: https://pangolin.net/
-  release_notes: https://github.com/fosrl/pangolin/releases
+release:
+  latest_version: 1.16.0
+  released_on: 2026-02-27
+  breaking: false
+  security: true
+  notes_url: https://github.com/fosrl/pangolin/releases/tag/1.16.0
