@@ -2,19 +2,15 @@ name: Pangolin
 vendor: fosrl
 platforms:
 - linux
-
-current_version: 1.16.0
-
+current_version: 1.16.2
 update_source:
   type: github_releases
   owner: fosrl
   repo: pangolin
   include_prereleases: false
   tag_pattern: ^\d+\.\d+\.\d+$
-
 versioning:
   scheme: semver
-
 metadata:
   homepage: https://pangolin.net/
   release_notes: https://github.com/fosrl/pangolin/releases
