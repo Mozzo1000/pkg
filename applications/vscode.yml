@@ -1,0 +1,23 @@
+name: Visual Studio Code
+vendor: microsoft
+platforms:
+- windows
+- macos
+- linux
+update_source:
+  type: github_releases
+  owner: microsoft
+  repo: vscode
+  include_prereleases: false
+  tag_pattern: ^\d+\.\d+\.\d+$
+versioning:
+  scheme: semver
+metadata:
+  homepage: https://code.visualstudio.com/
+  release_notes: https://github.com/microsoft/vscode/releases
+release:
+  latest_version: 1.111.0
+  released_on: 2026-03-09
+  breaking: false
+  security: false
+  notes_url: https://github.com/microsoft/vscode/releases/tag/1.111.0
