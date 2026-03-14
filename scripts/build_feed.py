@@ -58,16 +58,6 @@ def get_release_notes_link(data: dict) -> str:
 
 
 def build_item_tuple(filepath: Path) -> Optional[Tuple[str, str, str, str, str]]:
-    """
-    Returns a normalized tuple for an RSS item:
-    (title, link, guid, pubDate, description)
-
-    - title: "<App Name> <current_version>"
-    - link: ONLY metadata.release_notes (no fallbacks)
-    - guid: sha1(name + ":" + current_version)
-    - pubDate: file mtime in RFC 2822 (UTC)
-    - description: minimal HTML summary (wrapped in CDATA)
-    """
     data = load_app(filepath)
     if not data:
         return None
@@ -119,7 +109,7 @@ def build_rss(items: List[Tuple[str, str, str, str, str]],
         ET.SubElement(it, "pubDate").text = pub_date
 
         desc_el = ET.SubElement(it, "description")
-        desc_el.text = f"<![CDATA[{description}]]>"
+        desc_el.text = description
 
     return ET.ElementTree(rss)
 
