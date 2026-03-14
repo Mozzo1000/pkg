@@ -28,6 +28,7 @@ export function UserSettings() {
   }, []);
 
   useEffect(() => {
+    if (!supabase) return;
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
       if (session?.user) fetchSubscriptions(session.user.id);

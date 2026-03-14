@@ -16,6 +16,7 @@ export function AppTable({ apps }) {
 
   // 1. Initial Auth Check & Subscription Fetch
   useEffect(() => {
+    if (!supabase) return;
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
       if (session?.user) fetchSubscriptions(session.user.id);
