@@ -1,6 +1,6 @@
 import { useLocation } from "preact-iso";
 import { useState } from "preact/hooks";
-import { Rss, Menu, X } from "lucide-preact";
+import { Rss, Menu, X, Bell } from "lucide-preact";
 import icon from "../assets/icon.svg";
 
 export function Header() {
@@ -47,6 +47,18 @@ export function Header() {
 
 				{/* Action Area */}
 				<div className="flex items-center gap-2 lg:gap-4">
+					{/* Notifications Bell */}
+                    <a
+                        href="/notifications"
+                        title="Notification Settings"
+                        className={`p-2 rounded-lg transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-900 ${
+                            url === "/notifications" 
+                                ? "text-zinc-900 dark:text-white bg-zinc-100 dark:bg-zinc-900" 
+                                : "text-zinc-500 dark:text-zinc-400"
+                        }`}
+                    >
+                        <Bell size={20} fill={url === "/notifications" ? "currentColor" : "none"} />
+                    </a>
 					<a
 						href="/feed.xml"
 						target="_blank"
