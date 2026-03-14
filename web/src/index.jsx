@@ -5,6 +5,7 @@ import { Home } from './pages/Home.jsx';
 import { NotFound } from './pages/_404.jsx';
 import './style.css';
 import { Apps } from './pages/Apps.jsx';
+import { Docs } from './components/Docs.jsx';
 import { UserSettings } from './pages/UserSettings.jsx';
 
 export function App() {
@@ -15,6 +16,7 @@ export function App() {
 				<Router>
 					<Route path="/" component={Home} />
 					<Route path="/apps" component={Apps} />
+					<Route path="/docs" component={Docs} />
 					<Route path="/notifications" component={UserSettings} />
 
 					<Route default component={NotFound} />
