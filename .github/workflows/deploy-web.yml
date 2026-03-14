@@ -23,6 +23,7 @@ jobs:
         run: pip install pyyaml
 
       - name: Generate Data and Feed
+        working-directory: .
         run: |
           python scripts/generate_json.py --apps-dir applications --out web/public/data.json
           python scripts/build_feed.py --apps-dir applications --out web/public/feed.xml \
