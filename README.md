@@ -22,6 +22,13 @@ PKG is a centralized registry for monitoring application releases. Designed to p
 
 ## ✨ Features
 
+## Roadmap
+- [ ] Webhook for notifying about new releases.
+- [ ] Insights, how often do software release new version etc
+- [ ] Direct download links to software in repository
+- [ ] Ntfy integration
+- [ ] Spec for version crawling output (making it easier to integrate vendor specific crawling scripts)
+
 
 ## 🙌Contributing
 
