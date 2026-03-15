@@ -2,6 +2,7 @@ import { useState, useEffect } from 'preact/hooks';
 import { supabase } from '../lib/supabase';
 import { Bell, LogOut, Loader2, Mail, CheckCircle2, Github, Info, ChevronDown, ChevronUp } from 'lucide-preact';
 import { Button } from '../components/Button';
+import { useToast } from '../ToastContext';
 
 export function UserSettings() {
   const [apps, setApps] = useState([]);
@@ -13,6 +14,7 @@ export function UserSettings() {
   const [toast, setToast] = useState(null);
   const [subs, setSubs] = useState([]);
   const [showInfo, setShowInfo] = useState(false); // Toggle for info box
+  const showToast = useToast();
 
   useEffect(() => {
     fetch('/apps.json')
@@ -86,13 +88,50 @@ export function UserSettings() {
     }
   }
 
+
   async function toggleSub(appName) {
-    if (subs.includes(appName)) {
-      await supabase.from('subscriptions').delete().eq('user_id', user.id).eq('app_name', appName);
-      setSubs(subs.filter(s => s !== appName));
-    } else {
-      await supabase.from('subscriptions').insert({ user_id: user.id, app_name: appName });
-      setSubs([...subs, appName]);
+    try {
+      if (subs.includes(appName)) {
+        const { error } = await supabase
+          .from('subscriptions')
+          .delete()
+          .eq('user_id', user.id)
+          .eq('app_name', appName);
+
+        if (error) throw error;
+
+        setSubs(subs.filter(s => s !== appName));
+        
+        showToast({
+          title: "Subscription removed",
+          message: `You have successfully unsubscribed from ${appName} notifications.`,
+          type: "info"
+        });
+
+      } else {
+        const { error } = await supabase
+          .from('subscriptions')
+          .insert({ user_id: user.id, app_name: appName });
+
+        if (error) throw error;
+
+        setSubs([...subs, appName]);
+
+        showToast({
+          title: "Subscription added",
+          message: `You will receive an email notification when a new version of ${appName} is released.`,
+          type: "success"
+        });
+      }
+    } catch (err) {
+      console.error("Subscription Error:", err);
+      
+      // Error Toast for Failures
+      showToast({
+        title: "Update failed",
+        message: "We couldn't update your preferences. Please try again later.",
+        type: "error"
+      });
     }
   }
 

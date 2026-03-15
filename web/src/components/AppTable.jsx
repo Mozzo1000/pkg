@@ -53,8 +53,8 @@ export function AppTable({ apps }) {
       if (!error) setUserSubs(prev => prev.filter(name => name !== appName));
       toast({
         title: "Subscription removed",
-        message: "You have successfully unsubscribed from " + appName + " notifications.",
-        type: "success"
+        message: `You have successfully unsubscribed from ${appName} notifications.`,
+        type: "info"
       });
     } else {
       const { error } = await supabase
@@ -63,7 +63,7 @@ export function AppTable({ apps }) {
       if (!error) setUserSubs(prev => [...prev, appName]);
       toast({
         title: "Subscription added",
-        message: "You will receive an email notification when a new version of " + appName + " is released.",
+        message: `You will receive an email notification when a new version of ${appName} is released.`,
         type: "success"
       });
     }
