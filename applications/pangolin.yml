@@ -3,8 +3,8 @@ vendor: fosrl
 platforms:
 - linux
 metadata:
-  homepage: https://example.com/app
-  release_notes: https://github.com/acme/app/releases
+  homepage: https://pangolin.net/
+  release_notes: https://github.com/fosrl/pangolin/releases
 update_source:
   type: github_releases
   owner: fosrl
