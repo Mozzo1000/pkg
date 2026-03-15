@@ -6,8 +6,7 @@ export function Button({
   className = '', 
   ...props 
 }) {
-  const baseStyles = "inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-md text-sm font-medium transition-all duration-200 active:scale-[0.98]";
-  
+const baseStyles = "inline-flex items-center justify-center gap-2 px-6 py-3 md:px-5 md:py-2.5 rounded-md text-base md:text-sm font-medium transition-all duration-200 active:scale-[0.98] w-full md:w-auto whitespace-nowrap";  
   const variants = {
     primary: "bg-black text-white hover:bg-zinc-800 dark:bg-white dark:text-black dark:hover:bg-zinc-200",
     secondary: "bg-transparent text-zinc-600 border border-zinc-200 hover:border-black hover:text-black dark:text-zinc-400 dark:border-zinc-800 dark:hover:border-white dark:hover:text-white",
@@ -19,7 +18,7 @@ export function Button({
 
   return (
     <Element href={href} className={styles} {...props}>
-      {Icon && <Icon size={16} />}
+      {Icon && <Icon size={16} className="md:w-4 md:h-4" />}
       {children}
     </Element>
   );
