@@ -4,6 +4,7 @@ import {
   AlertTriangle, Search, Filter, ArrowUpDown, Bell 
 } from 'lucide-preact';
 import { supabase } from '../lib/supabase';
+import { useToast } from '../ToastContext';
 
 export function AppTable({ apps }) {
   const [searchTerm, setSearchTerm] = useState('');
@@ -12,6 +13,7 @@ export function AppTable({ apps }) {
   
   const [user, setUser] = useState(null);
   const [userSubs, setUserSubs] = useState([]);
+  const toast = useToast();
 
   useEffect(() => {
     if (!supabase) return;
@@ -49,11 +51,21 @@ export function AppTable({ apps }) {
         .eq('user_id', user.id)
         .eq('app_name', appName);
       if (!error) setUserSubs(prev => prev.filter(name => name !== appName));
+      toast({
+        title: "Subscription removed",
+        message: "You have successfully unsubscribed from " + appName + " notifications.",
+        type: "success"
+      });
     } else {
       const { error } = await supabase
         .from('subscriptions')
         .insert({ user_id: user.id, app_name: appName });
       if (!error) setUserSubs(prev => [...prev, appName]);
+      toast({
+        title: "Subscription added",
+        message: "You will receive an email notification when a new version of " + appName + " is released.",
+        type: "success"
+      });
     }
   }
 
