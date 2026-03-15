@@ -14,7 +14,7 @@ export function App() {
 		<LocationProvider>
 			<ToastProvider>
 				<Header />
-				<main>
+				<main className="bg-white dark:bg-zinc-950">
 					<Router>
 						<Route path="/" component={Home} />
 						<Route path="/apps" component={Apps} />

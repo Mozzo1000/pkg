@@ -1,9 +1,12 @@
 import { useLocation } from "preact-iso";
 import { useState } from "preact/hooks";
-import { Rss, Menu, X, Bell } from "lucide-preact";
+import { Rss, Menu, X, Bell, Sun, Moon } from "lucide-preact";
 import icon from "../assets/icon.svg";
+import { useTheme } from "../useTheme";
+import { Button } from "./Button";
 
 export function Header() {
+	const { theme, toggleTheme } = useTheme();
 	const { url } = useLocation();
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -17,7 +20,7 @@ export function Header() {
 	const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
 	return (
-		<header className="sticky top-0 z-50 w-full border-b border-zinc-200 bg-white/80 backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-950/80 transition-colors">
+		<header className="sticky top-0 z-50 w-full border-b border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950">
 			<div className="container mx-auto flex h-16 items-center justify-between px-4">
 				{/* Logo & Brand */}
 				<a
@@ -47,6 +50,13 @@ export function Header() {
 
 				{/* Action Area */}
 				<div className="flex items-center gap-2 lg:gap-4">
+					<Button variant="ghost" onClick={toggleTheme}>
+						{theme === 'dark' ? (
+							<Sun size={20} class="text-zinc-100" />
+						) : (
+							<Moon size={20} class="text-zinc-900" />
+						)}
+					</Button>
 					{/* Notifications Bell */}
                     <a
                         href="/notifications"
