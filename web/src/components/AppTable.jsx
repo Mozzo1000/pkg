@@ -171,12 +171,12 @@ export function AppTable({ apps }) {
 
                   {/* Links */}
                   <div className="col-span-1 md:col-span-2 flex md:justify-end gap-4 md:gap-3 border-t md:border-t-0 border-zinc-100 dark:border-zinc-900 pt-3 md:pt-0">
-                    <a href={app.metadata?.homepage} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 md:block text-zinc-400 hover:text-black dark:hover:text-white transition-colors text-xs md:text-sm">
-                      <ExternalLink size={18} className="md:w-4 md:h-4" />
+                    <a title="Website" href={app.metadata?.homepage} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 md:block text-zinc-400 hover:text-black dark:hover:text-white transition-colors text-xs md:text-sm">
+                      <ExternalLink size={20} className="md:w-6 md:h-6" />
                       <span className="md:hidden font-medium">Homepage</span>
                     </a>
-                    <a href={app.release_notes} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 md:block text-zinc-400 hover:text-black dark:hover:text-white transition-colors text-xs md:text-sm">
-                      <ScrollText size={18} className="md:w-4 md:h-4" />
+                    <a title="Release notes" href={app.release_notes} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 md:block text-zinc-400 hover:text-black dark:hover:text-white transition-colors text-xs md:text-sm">
+                      <ScrollText size={20} className="md:w-6 md:h-6" />
                       <span className="md:hidden font-medium">Release Notes</span>
                     </a>
                   </div>
