@@ -24,5 +24,5 @@ release:
   latest_version: v2.0.15
   released_on: 2026-03-03
   breaking: false
-  security: true
+  security: false
   notes_url: https://github.com/syncthing/syncthing/releases/tag/v2.0.15

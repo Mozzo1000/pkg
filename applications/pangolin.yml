@@ -17,5 +17,5 @@ release:
   latest_version: 1.16.2
   released_on: 2026-02-28
   breaking: false
-  security: true
+  security: false
   notes_url: https://github.com/fosrl/pangolin/releases/tag/1.16.2
