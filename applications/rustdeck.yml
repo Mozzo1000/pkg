@@ -1,0 +1,25 @@
+name: Rustdeck
+vendor: rustdeck
+platforms:
+- windows
+- macos
+- linux
+- android
+
+metadata:
+  homepage: https://rustdesk.com/
+  release_notes: https://github.com/rustdesk/rustdesk/releases
+update_source:
+  type: github_releases
+  owner: rustdeck
+  repo: rustdeck
+  include_prereleases: false
+  tag_pattern: ^\d+\.\d+\.\d+$
+versioning:
+  scheme: semver
+release:
+  latest_version: 1.4.6
+  released_on: 2026-03-05
+  breaking: false
+  security: false
+  notes_url: https://github.com/rustdesk/rustdesk/releases/tag/1.4.6

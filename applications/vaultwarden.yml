@@ -1,0 +1,22 @@
+name: Vaultwarden
+vendor: dani-garcia
+platforms:
+- linux
+
+metadata:
+  homepage: https://github.com/dani-garcia/vaultwarden
+  release_notes: https://github.com/dani-garcia/vaultwarden/releases
+update_source:
+  type: github_releases
+  owner: dani-garcia
+  repo: vaultwarden
+  include_prereleases: false
+  tag_pattern: ^\d+\.\d+\.\d+$
+versioning:
+  scheme: semver
+release:
+  latest_version: 1.35.4
+  released_on: 2026-02-23
+  breaking: false
+  security: true
+  notes_url: https://github.com/dani-garcia/vaultwarden/releases/tag/1.35.4

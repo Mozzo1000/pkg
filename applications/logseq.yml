@@ -1,0 +1,25 @@
+name: Logseq
+vendor: logseq
+platforms:
+- linux
+- windows
+- macos
+- android
+
+metadata:
+  homepage: https://logseq.com/
+  release_notes: https://github.com/logseq/logseq/releases
+update_source:
+  type: github_releases
+  owner: logseq
+  repo: logseq
+  include_prereleases: false
+  tag_pattern: ^\d+\.\d+\.\d+$
+versioning:
+  scheme: semver
+release:
+  latest_version: 0.10.15
+  released_on: 2025-12-01
+  breaking: false
+  security: false
+  notes_url: https://github.com/logseq/logseq/releases/tag/0.10.15

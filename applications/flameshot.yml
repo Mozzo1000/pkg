@@ -1,0 +1,28 @@
+name: Flameshot
+vendor: flameshot
+platforms:
+- windows
+- macos
+- linux
+
+update_source:
+  type: github_releases
+  owner: flameshot-org
+  repo: flameshot
+  include_prereleases: false
+  tag_pattern: ^v\d+\.\d+\.\d+$
+
+versioning:
+  scheme: semver
+  strip_prefix: v
+
+metadata:
+  homepage: https://flameshot.org
+  release_notes: https://github.com/flameshot-org/flameshot/releases
+
+release:
+  latest_version: v13.3.0
+  released_on: 2025-10-28
+  breaking: false
+  security: false
+  notes_url: https://github.com/flameshot-org/flameshot/releases/tag/v13.3.0

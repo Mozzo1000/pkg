@@ -1,0 +1,28 @@
+name: Moonlight (PC)
+vendor: moonlight-stream
+platforms:
+- windows
+- macos
+- linux
+
+update_source:
+  type: github_releases
+  owner: moonlight-stream
+  repo: moonlight-qt
+  include_prereleases: false
+  tag_pattern: ^v\d+\.\d+\.\d+$
+
+versioning:
+  scheme: semver
+  strip_prefix: v
+
+metadata:
+  homepage: https://moonlight-stream.org/
+  release_notes: https://github.com/moonlight-stream/moonlight-qt/releases
+
+release:
+  latest_version: v6.1.0
+  released_on: 2024-06-17
+  breaking: false
+  security: false
+  notes_url: https://github.com/moonlight-stream/moonlight-qt/releases/tag/v6.1.0

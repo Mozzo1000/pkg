@@ -1,0 +1,28 @@
+name: Joplin
+vendor: Laurent Cozic
+platforms:
+- windows
+- macos
+- linux
+
+update_source:
+  type: github_releases
+  owner: laurent22
+  repo: joplin
+  include_prereleases: false
+  tag_pattern: ^v\d+\.\d+\.\d+$
+
+versioning:
+  scheme: semver
+  strip_prefix: v
+
+metadata:
+  homepage: https://joplinapp.org/
+  release_notes: https://github.com/laurent22/joplin/releases
+
+release:
+  latest_version: v3.5.13
+  released_on: 2026-02-25
+  breaking: false
+  security: false
+  notes_url: https://github.com/laurent22/joplin/releases/tag/v3.5.13

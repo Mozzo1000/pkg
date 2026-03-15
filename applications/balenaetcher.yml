@@ -1,0 +1,28 @@
+name: balenaEtcher
+vendor: balena
+platforms:
+- windows
+- macos
+- linux
+
+update_source:
+  type: github_releases
+  owner: balena-io
+  repo: etcher
+  include_prereleases: false
+  tag_pattern: ^v\d+\.\d+\.\d+$
+
+versioning:
+  scheme: semver
+  strip_prefix: v
+
+metadata:
+  homepage: https://etcher.balena.io/
+  release_notes: https://github.com/balena-io/etcher/releases
+
+release:
+  latest_version: v2.1.4
+  released_on: 2025-07-29
+  breaking: false
+  security: false
+  notes_url: https://github.com/balena-io/etcher/releases/tag/v2.1.4
