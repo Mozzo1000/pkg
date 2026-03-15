@@ -1,0 +1,23 @@
+name: Helix
+vendor: helix
+platforms:
+- windows
+- linux
+- macos
+metadata:
+  homepage: https://helix-editor.com/
+  release_notes: https://github.com/helix-editor/helix/releases
+update_source:
+  type: github_releases
+  owner: helix-editor
+  repo: helix
+  include_prereleases: false
+  tag_pattern: ^\d+\.\d+\.\d+$
+versioning:
+  scheme: semver
+release:
+  latest_version: 25.07.1
+  released_on: 2025-07-18
+  breaking: false
+  security: false
+  notes_url: https://github.com/helix-editor/helix/releases/tag/25.07.1
