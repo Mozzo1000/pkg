@@ -1,0 +1,24 @@
+name: NeoVim
+vendor: neovim
+platforms:
+- windows
+- linux
+- macos
+metadata:
+  homepage: hhttps://neovim.io/
+  release_notes: https://github.com/neovim/neovim/releases
+update_source:
+  type: github_releases
+  owner: neovim
+  repo: neovim
+  include_prereleases: false
+  tag_pattern: ^v\d+\.\d+\.\d+$
+versioning:
+  scheme: semver
+  strip_prefix: v
+release:
+  latest_version: v0.11.6
+  released_on: 2026-01-26
+  breaking: false
+  security: false
+  notes_url: https://github.com/neovim/neovim/releases/tag/v0.11.6
