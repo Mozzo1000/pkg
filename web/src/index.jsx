@@ -7,21 +7,24 @@ import './style.css';
 import { Apps } from './pages/Apps.jsx';
 import { Docs } from './components/Docs.jsx';
 import { UserSettings } from './pages/UserSettings.jsx';
+import { ToastProvider } from './ToastContext';
 
 export function App() {
 	return (
 		<LocationProvider>
-			<Header />
-			<main>
-				<Router>
-					<Route path="/" component={Home} />
-					<Route path="/apps" component={Apps} />
-					<Route path="/docs" component={Docs} />
-					<Route path="/notifications" component={UserSettings} />
+			<ToastProvider>
+				<Header />
+				<main>
+					<Router>
+						<Route path="/" component={Home} />
+						<Route path="/apps" component={Apps} />
+						<Route path="/docs" component={Docs} />
+						<Route path="/notifications" component={UserSettings} />
 
-					<Route default component={NotFound} />
-				</Router>
-			</main>
+						<Route default component={NotFound} />
+					</Router>
+				</main>
+			</ToastProvider>
 		</LocationProvider>
 	);
 }
