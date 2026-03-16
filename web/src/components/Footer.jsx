@@ -19,8 +19,7 @@ export function Footer() {
               </span>
             </div>
             <p className="text-base text-slate-600 dark:text-slate-400 max-w-sm leading-relaxed">
-              An open-source project providing systematic release signals for enterprise packaging teams. 
-              Decoupling update awareness from manual effort through structured data.
+              An open-source project that monitor new software releases and notify you as soon as they are available.
             </p>
           </div>
 
