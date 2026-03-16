@@ -135,8 +135,8 @@ export function UserSettings() {
     }
   }
 
-  if (loading) return <div className="p-20 text-center font-mono text-zinc-500 text-lg">Loading profile...</div>;
-
+  if (loading) return <div className="p-20 text-center font-mono text-slate-500 text-lg">Loading profile...</div>;
+  
   if (!user) {
     const isAnyLoading = loginLoading || githubLoading;
 
@@ -153,21 +153,18 @@ export function UserSettings() {
           </div>
         )}
 
-        <h2 className="text-3xl font-bold mb-3 tracking-tight">Notifications</h2>
-        <p className="text-zinc-500 mb-8 text-base">Sign in to manage your email alerts.</p>
+        <h2 className="text-3xl font-bold mb-3 tracking-tight text-slate-900 dark:text-slate-50">Notifications</h2>
+        <p className="text-slate-500 dark:text-slate-400 mb-8 text-base">Sign in to manage your email alerts.</p>
         
         <div className="space-y-5">
-          <button 
-            onClick={handleGitHubLogin}
-            disabled={isAnyLoading}
-            className="w-full flex items-center justify-center gap-3 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 py-3 rounded-lg font-semibold text-base hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors disabled:opacity-50"
-          >
+
+          <Button className="w-full! " onClick={handleGitHubLogin} disabled={isAnyLoading} variant="secondary">
             {githubLoading ? <Loader2 size={20} className="animate-spin" /> : <><Github size={20}/> Continue with GitHub</>}
-          </button>
+          </Button>
 
           <div className="relative py-2">
-            <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-zinc-200 dark:border-zinc-800"></span></div>
-            <div className="relative flex justify-center text-sm uppercase"><span className="bg-white dark:bg-zinc-950 px-3 text-zinc-400 font-mono">Or</span></div>
+            <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-slate-200 dark:border-slate-800"></span></div>
+            <div className="relative flex justify-center text-sm uppercase"><span className="bg-white dark:bg-slate-950 px-3 text-slate-400 font-mono">Or</span></div>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-4">
@@ -175,17 +172,14 @@ export function UserSettings() {
               type="email" 
               placeholder="your@email.com" 
               required
-              className="w-full p-3 text-base bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-lg outline-none focus:ring-2 focus:ring-zinc-500/20 disabled:opacity-50"
+              className="w-full p-3 text-base bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg outline-none text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-slate-500/20 disabled:opacity-50"
               value={email}
               onInput={(e) => setEmail(e.currentTarget.value)}
               disabled={isAnyLoading}
             />
-            <button 
-              disabled={isAnyLoading}
-              className="w-full bg-zinc-900 dark:bg-white text-white dark:text-black py-3 rounded-lg font-bold text-base flex items-center justify-center gap-2 disabled:opacity-70 transition-all"
-            >
-              {loginLoading ? <Loader2 size={20} className="animate-spin" /> : 'Send Magic Link'}
-            </button>
+            <Button variant="primary" className="w-full!" disabled={isAnyLoading}>
+                {loginLoading ? <Loader2 size={20} className="animate-spin" /> : 'Send Magic Link'} 
+            </Button>
           </form>
         </div>
       </div>
@@ -193,41 +187,36 @@ export function UserSettings() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto py-16 px-6">
-      <div className="flex justify-between items-center mb-12 border-b border-zinc-100 dark:border-zinc-900 pb-8">
+    <div className="max-w-3xl mx-auto py-16 px-6 ">
+      <div className="flex justify-between items-center mb-12 border-b border-slate-100 dark:border-slate-900 pb-8">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">Account Settings</h2>
-          <p className="text-zinc-500 text-base font-mono mt-1">{user.email}</p>
+          <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-50">Account Settings</h2>
+          <p className="text-slate-500 dark:text-slate-400 text-base font-mono mt-1">{user.email}</p>
         </div>
-        <Button variant="secondary" onClick={() => supabase.auth.signOut().then(() => setUser(null))} icon={LogOut} className="px-5 py-2 text-base">Sign Out</Button>
+        <Button variant="secondary" onClick={() => supabase.auth.signOut().then(() => setUser(null))} icon={LogOut}>Sign Out</Button>
       </div>
 
       <div className="flex justify-between items-end mb-6">
         <div>
-          <h3 className="text-base font-bold uppercase tracking-widest text-zinc-400">Notification Preferences</h3>
-          <p className="text-sm text-zinc-500 mt-1">Updates sent to {user.email}</p>
+          <h3 className="text-base font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">Notification Preferences</h3>
+          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Updates sent to {user.email}</p>
         </div>
         
-        {/* Toggleable Info Button */}
-        <button 
-          onClick={() => setShowInfo(!showInfo)}
-          className="flex items-center gap-2 text-sm font-medium text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition-colors p-2"
-        >
+        <Button variant="ghost" onClick={() => setShowInfo(!showInfo)}>
           <Info size={18} />
           {showInfo ? <ChevronUp size={16}/> : <ChevronDown size={16}/>}
-        </button>
+        </Button>
       </div>
 
-      {/* NEW: Collapsible Explainer Section */}
       {showInfo && (
-        <div className="mb-10 p-6 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/30 animate-in slide-in-from-top-2 duration-300">
-          <h4 className="text-base font-bold mb-2 flex items-center gap-2">
+        <div className="mb-10 p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/30 animate-in slide-in-from-top-2 duration-300">
+          <h4 className="text-base font-bold mb-2 flex items-center gap-2 text-slate-900 dark:text-slate-50">
             <CheckCircle2 size={18} className="text-emerald-500" />
             Email notification
           </h4>
-          <p className="text-base text-zinc-600 dark:text-zinc-400 leading-relaxed">
+          <p className="text-base text-slate-600 dark:text-slate-400 leading-relaxed">
             When we detected a new version, we'll send an email from 
-            <code className="mx-1 px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-200 font-mono text-[13px]">
+            <code className="mx-1 px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-200 font-mono text-[13px]">
               notifications@pkg.rewake.org
             </code> 
             so you never miss an update.
@@ -242,17 +231,17 @@ export function UserSettings() {
             onClick={() => toggleSub(app.name)}
             className={`flex items-center justify-between p-6 rounded-xl border transition-all ${
               subs.includes(app.name)
-              ? 'border-zinc-900 dark:border-white bg-zinc-50 dark:bg-zinc-900/40 shadow-sm'
-              : 'border-zinc-200 dark:border-zinc-800 hover:border-zinc-400 group'
+              ? 'border-slate-900 dark:border-slate-50 bg-slate-50 dark:bg-slate-900/40 shadow-sm'
+              : 'border-slate-200 dark:border-slate-800 hover:border-slate-400 dark:hover:border-slate-600 group'
             }`}
           >
-            <div className="text-left">
+            <div className="text-left text-slate-900 dark:text-slate-50">
               <p className="font-bold text-lg">{app.name}</p>
-              <p className="text-xs text-zinc-500 font-mono mt-1 opacity-70">{app.latest_version}</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400 font-mono mt-1 opacity-70">{app.latest_version}</p>
             </div>
             <Bell 
               size={20} 
-              className={subs.includes(app.name) ? 'text-zinc-900 dark:text-white' : 'text-zinc-300 group-hover:text-zinc-400 transition-colors'} 
+              className={subs.includes(app.name) ? 'text-slate-900 dark:text-slate-50' : 'text-slate-300 dark:text-slate-600 group-hover:text-slate-400 transition-colors'} 
             />
           </button>
         ))}

@@ -13,8 +13,10 @@ export function App() {
 	return (
 		<LocationProvider>
 			<ToastProvider>
+				<div className="flex flex-col h-screen bg-white dark:bg-slate-950">
 				<Header />
-				<main className="bg-white dark:bg-zinc-950">
+				
+				<main className=" flex-1 overflow-y-auto">
 					<Router>
 						<Route path="/" component={Home} />
 						<Route path="/apps" component={Apps} />
@@ -24,6 +26,7 @@ export function App() {
 						<Route default component={NotFound} />
 					</Router>
 				</main>
+				</div>
 			</ToastProvider>
 		</LocationProvider>
 	);

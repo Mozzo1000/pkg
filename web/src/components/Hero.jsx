@@ -4,17 +4,17 @@ import { LiveSignalFeed } from './LiveSignalFeed';
 
 export function Hero() {
   return (
-    <section className="bg-white dark:bg-zinc-950 border-b border-zinc-100 dark:border-zinc-900 transition-colors">
+    <section className="bg-white dark:bg-slate-950 border-b border-slate-100 dark:border-slate-900 transition-colors">
       <div className="container mx-auto px-6 py-16 sm:py-24">
         <div className="grid lg:grid-cols-5 gap-16 items-start">
           
           {/* Main Content Area */}
           <div className="lg:col-span-3">
-            <h1 className="text-4xl font-bold tracking-tight text-zinc-900 dark:text-white sm:text-6xl mb-6 leading-[1.1]">
+            <h1 className="text-4xl font-bold tracking-tight text-slate-900 dark:text-slate-50 sm:text-6xl mb-6 leading-[1.1]">
               Unified version tracking for software packages
             </h1>
 
-            <p className="text-lg text-zinc-600 dark:text-zinc-400 mb-10 max-w-2xl leading-relaxed">
+            <p className="text-lg text-slate-500 dark:text-slate-400 mb-10 max-w-2xl leading-relaxed">
               Stop relying on individuals to track software updates. We automatically detect new versions and notify the right teams. Transforming scattered knowledge into systematic, event-driven workflows.
             </p>
 

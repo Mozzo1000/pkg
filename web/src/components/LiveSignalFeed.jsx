@@ -51,9 +51,9 @@ export function LiveSignalFeed() {
   }, []);
 
   return (
-    <div className="p-6 rounded-lg border border-zinc-100 bg-zinc-50/30 dark:border-zinc-900 dark:bg-zinc-900/30 transition-colors">
-      <div className="flex items-center justify-between mb-6 pb-4 border-b border-zinc-100 dark:border-zinc-800">
-        <div className="flex items-center gap-2 font-bold text-zinc-900 dark:text-white text-sm uppercase tracking-tight">
+    <div className="p-6 rounded-lg border border-slate-200 bg-slate-50/50 dark:border-slate-800 dark:bg-slate-900/30 transition-colors">
+      <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-200 dark:border-slate-800">
+        <div className="flex items-center gap-2 font-bold text-slate-900 dark:text-slate-50 text-sm uppercase tracking-tight">
           <Activity size={16} className="text-blue-500" />
           Updates
         </div>
@@ -63,23 +63,23 @@ export function LiveSignalFeed() {
         {updates.map((update, index) => (
           <div 
             key={update.id}
-            className="group flex items-center justify-between p-4 rounded border border-zinc-100 bg-white dark:bg-zinc-950 dark:border-zinc-800 animate-signal-flow transition-all duration-500"
+            className="group flex items-center justify-between p-4 rounded border border-slate-200 bg-white dark:bg-slate-950 dark:border-slate-800 animate-signal-flow transition-all duration-500 shadow-sm"
           >
             <div className="flex items-center gap-4">
               <div className={`w-1.5 h-8 rounded-full ${update.color} opacity-80 group-hover:opacity-100 transition-opacity`}></div>
               
               <div>
-                <div className="text-sm font-bold text-zinc-950 dark:text-white leading-none mb-1.5">
+                <div className="text-sm font-bold text-slate-900 dark:text-slate-50 leading-none mb-1.5">
                   {update.app}
                 </div>
-                <div className="flex items-center gap-1.5 text-[10px] text-zinc-500 font-mono">
-                  <Package size={12} className="text-zinc-400" />
+                <div className="flex items-center gap-1.5 text-[10px] text-slate-500 dark:text-slate-400 font-mono">
+                  <Package size={12} className="text-slate-400 dark:text-slate-500" />
                   v{update.version}
                 </div>
               </div>
             </div>
 
-            <div className={`text-[10px] font-bold font-mono px-2 py-1 rounded bg-zinc-50 dark:bg-zinc-900 ${index === 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-zinc-400'}`}>
+            <div className={`text-[10px] font-bold font-mono px-2 py-1 rounded bg-slate-100 dark:bg-slate-900 ${index === 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400'}`}>
               {update.time}
             </div>
           </div>
