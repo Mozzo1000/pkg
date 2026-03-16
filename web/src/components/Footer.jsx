@@ -39,6 +39,9 @@ export function Footer() {
               <li>
                 <a href="/notifications" className="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-50 transition-colors">Notifications</a>
               </li>
+              <li>
+                <a href="/privacy" className="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-50 transition-colors">Privacy policy</a>
+              </li>
             </ul>
           </div>
 

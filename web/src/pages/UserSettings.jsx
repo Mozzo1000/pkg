@@ -181,6 +181,15 @@ export function UserSettings() {
                 {loginLoading ? <Loader2 size={20} className="animate-spin" /> : 'Send Magic Link'} 
             </Button>
           </form>
+          <p className="mt-8 text-center text-[11px] leading-relaxed text-slate-500 dark:text-slate-500 font-mono uppercase tracking-wider">
+            By continuing, you agree to our{' '}
+            <a 
+              href="/privacy" 
+              className="text-slate-900 dark:text-slate-100 underline underline-offset-4 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
+            >
+              Privacy Policy
+            </a>
+          </p>
         </div>
       </div>
     );

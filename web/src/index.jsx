@@ -8,6 +8,7 @@ import { Apps } from './pages/Apps.jsx';
 import { Docs } from './components/Docs.jsx';
 import { UserSettings } from './pages/UserSettings.jsx';
 import { ToastProvider } from './ToastContext';
+import { Privacy } from './pages/Privacy.jsx';
 
 export function App() {
 	return (
@@ -22,6 +23,9 @@ export function App() {
 						<Route path="/apps" component={Apps} />
 						<Route path="/docs" component={Docs} />
 						<Route path="/notifications" component={UserSettings} />
+
+						<Route path="/privacy" component={Privacy} />
+
 
 						<Route default component={NotFound} />
 					</Router>
