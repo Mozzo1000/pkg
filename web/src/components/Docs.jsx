@@ -6,7 +6,7 @@ const docFiles = import.meta.glob('../docs/**/*.md', { eager: true });
 
 export function Docs() {
   // CONFIG: Change this to the slug of the page you want to load first
-  const DEFAULT_SLUG = 'about'; 
+  const DEFAULT_SLUG = 'introduction'; 
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [expandedSections, setExpandedSections] = useState({});
@@ -121,7 +121,7 @@ export function Docs() {
                         onClick={() => { setActiveSlug(page.slug); setIsMobileMenuOpen(false); }}
                         className={`w-full flex items-center gap-3 pl-4 pr-3 py-1.5 text-sm transition-colors ${
                           activeSlug === page.slug 
-                            ? 'text-slate-900 dark:text-slate-50 font-medium border-l-2 border-slate-900 dark:border-slate-50 -ml-[1px]' 
+                            ? 'text-slate-900 dark:text-slate-50 font-medium border-l-2 border-slate-900 dark:border-slate-50 -ml-px' 
                             : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-300'
                         }`}
                       >

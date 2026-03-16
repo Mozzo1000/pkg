@@ -1,5 +1,3 @@
-# Requesting New Applications Guide
-
 PKG is a community-driven registry. If you rely on an enterprise application that is not currently being tracked, you can request its addition through our official tracking repository.
 
 ## The Submission Process
