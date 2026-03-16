@@ -37,6 +37,7 @@ export function Docs() {
       // If we find the slug we actually want, mark it
       if (slug === DEFAULT_SLUG) preferredSlug = slug;
 
+      // @ts-ignore
       const pageData = { slug, title, html: module.html };
 
       if (isRoot) {

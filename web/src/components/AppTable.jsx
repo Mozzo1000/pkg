@@ -83,6 +83,7 @@ export function AppTable({ apps }) {
         if (sortType === 'name') return a.name.localeCompare(b.name);
         const dateA = new Date(a.released_on || 0);
         const dateB = new Date(b.released_on || 0);
+        // @ts-ignore
         return sortType === 'newest' ? dateB - dateA : dateA - dateB;
       });
   }, [apps, searchTerm, filterType, sortType]);
