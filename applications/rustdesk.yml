@@ -11,8 +11,8 @@ metadata:
   release_notes: https://github.com/rustdesk/rustdesk/releases
 update_source:
   type: github_releases
-  owner: rustdeck
-  repo: rustdeck
+  owner: rustdesk
+  repo: rustdesk
   include_prereleases: false
   tag_pattern: ^\d+\.\d+\.\d+$
 versioning:
