@@ -34,6 +34,7 @@ APPS_DIR = REPO_ROOT / "applications"
 CHECKER = REPO_ROOT / "scripts" / "github_releases.py"
 
 DEFAULT_BASE = os.getenv("DEFAULT_BASE_BRANCH", "main")
+errors: List[str] = []
 
 def run(cmd: List[str], check=True, capture=True, env=None) -> subprocess.CompletedProcess:
     """Run a command with sane defaults, capturing stdout/stderr."""
@@ -149,6 +150,8 @@ def run_checker(app: AppDef) -> Dict:
 
     res = run(cmd, check=False)
     if res.returncode != 0:
+        err = f"{app.file_path.name}: {res.stderr.strip() or res.stdout.strip()}"
+        errors.append(err)
         raise RuntimeError(f"checker failed: {res.stderr.strip() or res.stdout.strip()}")
     try:
         return json.loads(res.stdout or "{}")
@@ -215,7 +218,6 @@ def create_pr_for_app(app: AppDef, new_tag: str, ctx: Dict, base_branch: str) ->
 
 
 def main() -> int:
-    errors: List[str] = []
     apps = load_app_defs()
 
     if not apps:
@@ -243,8 +245,10 @@ def main() -> int:
             error(err)
 
     if errors:
-        body = "Errors were encountered during automated application version detection:\n\n"
-        body += "\n".join(f"- {e}" for e in errors)
+        body = f"Errors were encountered during automated application version detection\n Automation ran: {datetime.now()}\n\n"
+        body += "```\n"
+        body += "\n".join(f"{e}" for e in errors)
+        body += "\n```"
         try:
             run([
                 "gh", "issue", "create",
