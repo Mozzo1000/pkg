@@ -1,0 +1,26 @@
+name: Greenshot
+vendor: greenshot
+platforms:
+- windows
+
+metadata:
+  homepage: https://getgreenshot.org/
+  release_notes: https://github.com/greenshot/greenshot/releases
+
+update_source:
+  type: github_releases
+  owner: greenshot
+  repo: greenshot
+  include_prereleases: false
+  tag_pattern: ^v\d+\.\d+\.\d+$
+
+versioning:
+  scheme: semver
+  strip_prefix: v
+
+release:
+  latest_version: v1.3.312
+  released_on: 2026-01-07
+  breaking: false
+  security: false
+  notes_url: https://github.com/greenshot/greenshot/releases/tag/v1.3.312
