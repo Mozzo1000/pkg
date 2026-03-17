@@ -187,7 +187,14 @@ export function UserSettings() {
               href="/privacy" 
               className="text-slate-900 dark:text-slate-100 underline underline-offset-4 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
             >
-              Privacy Policy
+              Privacy Policy 
+            </a>
+            <span> and </span> 
+            <a 
+              href="/terms" 
+              className="text-slate-900 dark:text-slate-100 underline underline-offset-4 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
+            >
+              Terms of Service
             </a>
           </p>
         </div>

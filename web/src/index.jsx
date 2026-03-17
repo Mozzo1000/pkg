@@ -9,6 +9,7 @@ import { Docs } from './components/Docs.jsx';
 import { UserSettings } from './pages/UserSettings.jsx';
 import { ToastProvider } from './ToastContext';
 import { Privacy } from './pages/Privacy.jsx';
+import { Terms } from './pages/Terms.jsx';
 
 export function App() {
 	return (
@@ -25,6 +26,7 @@ export function App() {
 						<Route path="/notifications" component={UserSettings} />
 
 						<Route path="/privacy" component={Privacy} />
+						<Route path="/terms" component={Terms} />
 
 
 						<Route default component={NotFound} />
