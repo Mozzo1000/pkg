@@ -5,7 +5,7 @@ platforms:
 - linux
 - macos
 metadata:
-  homepage: hhttps://neovim.io/
+  homepage: https://neovim.io/
   release_notes: https://github.com/neovim/neovim/releases
 update_source:
   type: github_releases
