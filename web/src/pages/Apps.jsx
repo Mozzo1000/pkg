@@ -20,16 +20,6 @@ export function Apps() {
       });
   }, []);
 
-  if (loading) {
-    return (
-      <div className="container mx-auto py-12 px-6">
-        <div className="h-64 flex items-center justify-center border border-dashed border-zinc-200 dark:border-zinc-800 rounded-lg">
-          <span className="text-zinc-500 font-mono text-sm">Querying registry...</span>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="container mx-auto py-12 px-6">
       <div className="flex flex-row justify-between mb-8">
@@ -55,7 +45,7 @@ export function Apps() {
 
       
       
-      <AppTable apps={apps} />
+      <AppTable apps={apps} loading={loading} />
     </div>
   );
 }

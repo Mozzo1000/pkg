@@ -6,7 +6,7 @@ import {
 import { supabase } from '../lib/supabase';
 import { useToast } from '../ToastContext';
 
-export function AppTable({ apps }) {
+export function AppTable({ apps, loading }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('all');
   const [sortType, setSortType] = useState('newest');
@@ -134,7 +134,11 @@ export function AppTable({ apps }) {
 
         {/* List Content */}
         <div className="divide-y divide-slate-100 dark:divide-slate-800/50">
-          {processedApps.length > 0 ? (
+        {loading ? (
+            /* Render 6 skeleton rows while loading */
+            Array.from({ length: 6 }).map((_, i) => <TableRowSkeleton key={i} />)
+          ) :
+          processedApps.length > 0 ? (
             processedApps.map((app) => {
               const isSubscribed = userSubs.includes(app.name);
               return (
@@ -201,6 +205,27 @@ export function AppTable({ apps }) {
             </div>
           )}
         </div>
+      </div>
+    </div>
+  );
+}
+
+function TableRowSkeleton() {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-0 px-6 py-5 md:py-4 items-center animate-pulse">
+      <div className="col-span-1 md:col-span-5 flex items-center gap-3">
+        <div className="w-6 h-6 bg-slate-200 dark:bg-slate-800 rounded" />
+        <div className="w-32 h-5 bg-slate-200 dark:bg-slate-800 rounded" />
+      </div>
+      <div className="col-span-1 md:col-span-3">
+        <div className="w-16 h-6 bg-slate-100 dark:bg-slate-800/50 rounded" />
+      </div>
+      <div className="col-span-1 md:col-span-2">
+        <div className="w-24 h-4 bg-slate-100 dark:bg-slate-800/50 rounded" />
+      </div>
+      <div className="col-span-1 md:col-span-2 flex md:justify-end gap-4">
+        <div className="w-6 h-6 bg-slate-100 dark:bg-slate-800 rounded-full" />
+        <div className="w-6 h-6 bg-slate-100 dark:bg-slate-800 rounded-full" />
       </div>
     </div>
   );
