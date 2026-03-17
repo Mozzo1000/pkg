@@ -3,8 +3,8 @@ import { Layers, Activity, Bell } from 'lucide-preact';
 export function Features() {
   const features = [
     {
-      title: "250+ Applications tracked",
-      description: "A comprehensive library of enterprise software metadata, from developer tools to core productivity suites.",
+      title: "5+ Applications tracked",
+      description: "A comprehensive library of software metadata, from developer tools to core productivity suites.",
       icon: Layers
     },
     {
