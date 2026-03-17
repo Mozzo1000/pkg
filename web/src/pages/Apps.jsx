@@ -22,23 +22,23 @@ export function Apps() {
 
   return (
     <div className="container mx-auto py-12 px-6">
-      <div className="flex flex-row justify-between mb-8">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-8">
         <div>
           <h1 className="text-2xl font-bold text-black dark:text-white">Applications</h1>
           <p className="text-zinc-500 dark:text-zinc-400 text-sm mt-1">
             Browse all tracked applications and their latest versions. Subscribe to the RSS feed for real-time updates.
           </p>
         </div>
-        <div className="flex gap-4">
-          <div>
-          <Button href="/feed.xml" target="_blank" variant="secondary" icon={Rss}>
-            RSS Feed
-          </Button>
+        <div className="flex gap-3 w-full md:w-auto">
+          <div className="flex-1 md:flex-none">
+            <Button href="/feed.xml" target="_blank" variant="secondary" icon={Rss}>
+              RSS Feed
+            </Button>
           </div>
-          <div>
-          <Button href="/apps.json" target="_blank" variant="secondary" icon={Braces}>
-            JSON
-          </Button>
+          <div className="flex-1 md:flex-none">
+            <Button href="/apps.json" target="_blank" variant="secondary" icon={Braces}>
+              JSON
+            </Button>
           </div>
         </div>
       </div>
