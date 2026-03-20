@@ -18,5 +18,5 @@ release:
   latest_version: v1.3.315
   released_on: 2026-03-20
   breaking: false
-  security: false
+  security: true
   notes_url: https://github.com/greenshot/greenshot/releases/tag/v1.3.315
