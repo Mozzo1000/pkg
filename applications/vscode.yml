@@ -16,8 +16,8 @@ metadata:
   homepage: https://code.visualstudio.com/
   release_notes: https://github.com/microsoft/vscode/releases
 release:
-  latest_version: 1.112.0
-  released_on: 2026-03-18
+  latest_version: 1.113.0
+  released_on: 2026-03-25
   breaking: false
   security: false
-  notes_url: https://github.com/microsoft/vscode/releases/tag/1.112.0
+  notes_url: https://github.com/microsoft/vscode/releases/tag/1.113.0
