@@ -4,24 +4,20 @@ platforms:
 - windows
 - macos
 - linux
-
 metadata:
   homepage: https://logseq.com/
   release_notes: https://github.com/obsproject/obs-studio/releases
-
 update_source:
   type: github_releases
   owner: obsproject
   repo: obs-studio
   include_prereleases: false
   tag_pattern: ^\d+\.\d+\.\d+$
-
 versioning:
   scheme: semver
-
 release:
-  latest_version: 32.1.0
-  released_on: 2026-03-11
+  latest_version: 32.1.1
+  released_on: 2026-04-02
   breaking: false
   security: false
-  notes_url: https://github.com/obsproject/obs-studio/releases/tag/32.1.0
+  notes_url: https://github.com/obsproject/obs-studio/releases/tag/32.1.1
