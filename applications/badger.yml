@@ -1,0 +1,26 @@
+name: Badger
+vendor: fosrl
+platforms:
+- linux
+
+update_source:
+  type: github_releases
+  owner: fosrl
+  repo: badger
+  include_prereleases: false
+  tag_pattern: ^v\d+\.\d+\.\d+$
+
+versioning:
+  scheme: semver
+  strip_prefix: v
+
+metadata:
+  homepage: https://pangolin.net/
+  release_notes: https://github.com/fosrl/badger/releases
+
+release:
+  latest_version: v1.4.0
+  released_on: 2026-03-20
+  breaking: false
+  security: false
+  notes_url: https://github.com/fosrl/badger/releases/tag/v1.4.0
