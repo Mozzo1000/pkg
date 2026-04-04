@@ -14,8 +14,8 @@ update_source:
 versioning:
   scheme: semver
 release:
-  latest_version: 1.16.2
-  released_on: 2026-02-28
+  latest_version: 1.17.0
+  released_on: 2026-04-04
   breaking: false
   security: false
-  notes_url: https://github.com/fosrl/pangolin/releases/tag/1.16.2
+  notes_url: https://github.com/fosrl/pangolin/releases/tag/1.17.0
