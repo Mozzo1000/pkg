@@ -4,25 +4,21 @@ platforms:
 - windows
 - macos
 - linux
-
 update_source:
   type: github_releases
   owner: syncthing
   repo: syncthing
   include_prereleases: false
   tag_pattern: ^v\d+\.\d+\.\d+$
-
 versioning:
   scheme: semver
   strip_prefix: v
-
 metadata:
   homepage: https://syncthing.net/
   release_notes: https://github.com/syncthing/syncthing/releases
-
 release:
-  latest_version: v2.0.15
-  released_on: 2026-03-03
+  latest_version: v2.0.16
+  released_on: 2026-04-07
   breaking: false
   security: false
-  notes_url: https://github.com/syncthing/syncthing/releases/tag/v2.0.15
+  notes_url: https://github.com/syncthing/syncthing/releases/tag/v2.0.16
