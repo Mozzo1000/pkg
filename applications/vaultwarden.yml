@@ -14,8 +14,8 @@ update_source:
 versioning:
   scheme: semver
 release:
-  latest_version: 1.35.6
-  released_on: 2026-04-12
+  latest_version: 1.35.7
+  released_on: 2026-04-13
   breaking: false
   security: true
-  notes_url: https://github.com/dani-garcia/vaultwarden/releases/tag/1.35.6
+  notes_url: https://github.com/dani-garcia/vaultwarden/releases/tag/1.35.7
