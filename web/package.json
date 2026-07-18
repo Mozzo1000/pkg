@@ -24,7 +24,7 @@
 		"@preact/preset-vite": "^2.10.2",
 		"@tailwindcss/typography": "^0.5.19",
 		"@testing-library/preact": "^3.2.4",
-		"autoprefixer": "^10.4.27",
+		"autoprefixer": "^10.5.4",
 		"eslint": "^10.7.0",
 		"eslint-plugin-react-hooks": "^7.1.1",
 		"globals": "^17.7.0",
