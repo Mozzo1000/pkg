@@ -1,4 +1,5 @@
-import { Github, Rss, Heart } from 'lucide-preact';
+import { Rss, Heart } from 'lucide-preact';
+import { GithubIcon } from './GithubIcon';
 import icon from '../assets/icon.svg';
 
 export function Footer() {
@@ -54,7 +55,7 @@ export function Footer() {
             <ul className="space-y-3 text-base">
               <li>
                 <a href="https://github.com/mozzo1000/pkg" className="flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-50 transition-colors">
-                  <Github size={18} /> GitHub
+                  <GithubIcon size={18} /> GitHub
                 </a>
               </li>
               <li>

@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'preact/hooks';
 import { supabase } from '../lib/supabase';
-import { Bell, LogOut, Loader2, Mail, CheckCircle2, Github, Info, ChevronDown, ChevronUp } from 'lucide-preact';
+import { Bell, LogOut, Loader2, Mail, CheckCircle2, Info, ChevronDown, ChevronUp } from 'lucide-preact';
 import { Button } from '../components/Button';
+import { GithubIcon } from '../components/GithubIcon';
 import { useToast } from '../ToastContext';
 
 export function UserSettings() {
@@ -159,7 +160,7 @@ export function UserSettings() {
         <div className="space-y-5">
 
           <Button className="w-full! " onClick={handleGitHubLogin} disabled={isAnyLoading} variant="secondary">
-            {githubLoading ? <Loader2 size={20} className="animate-spin" /> : <><Github size={20}/> Continue with GitHub</>}
+            {githubLoading ? <Loader2 size={20} className="animate-spin" /> : <><GithubIcon size={20}/> Continue with GitHub</>}
           </Button>
 
           <div className="relative py-2">
