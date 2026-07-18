@@ -15,9 +15,12 @@ Usage:
 
 YAML fields used:
   name: string                      # fallback: filename stem
-  current_version: string           # vendor version string (required)
+  release:
+    latest_version: string          # vendor version string (required)
+    released_on: date               # optional; defaults to today if missing
+    notes_url: string                # PREFERRED
   metadata:
-    release_notes: string           # PREFERRED
+    release_notes: string           # fallback if release.notes_url is missing
 """
 
 import argparse
@@ -49,11 +52,11 @@ def load_app(filepath: Path) -> Optional[dict]:
         return None
 
 
-def get_release_notes_link(data: dict) -> str:
-    if data["release"].get("notes_url"):
-        return data["release"].get("notes_url")
-    elif data["metadata"].get("release_notes"):
-        return data["metadata"].get("release_notes")
+def get_release_notes_link(release: dict, metadata: dict) -> str:
+    if release.get("notes_url"):
+        return release.get("notes_url")
+    elif metadata.get("release_notes"):
+        return metadata.get("release_notes")
     return ""
 
 
@@ -62,18 +65,22 @@ def build_item_tuple(filepath: Path) -> Optional[Tuple[str, str, str, str, str]]
     if not data:
         return None
 
+    release = data.get("release") if isinstance(data.get("release"), dict) else {}
+    metadata = data.get("metadata") if isinstance(data.get("metadata"), dict) else {}
+
     name = str(data.get("name") or filepath.stem).strip()
-    current_version = str(data["release"].get("latest_version") or "").strip()
+    current_version = str(release.get("latest_version") or "").strip()
     if not current_version:
         return None
 
-    link = get_release_notes_link(data)
+    link = get_release_notes_link(release, metadata)
 
     title = f"{name} {current_version}"
     guid_raw = f"{name}:{current_version}".encode("utf-8")
     guid = hashlib.sha1(guid_raw).hexdigest()
 
-    mtime = dt.datetime.combine(data["release"].get("released_on"), dt.time.min, tzinfo=dt.timezone.utc)
+    released_on = release.get("released_on") or dt.date.today()
+    mtime = dt.datetime.combine(released_on, dt.time.min, tzinfo=dt.timezone.utc)
     pub_date = iso_to_rfc2822(mtime)
 
     # Minimal description — no homepage or extra links
