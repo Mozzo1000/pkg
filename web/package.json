@@ -5,7 +5,9 @@
 		"dev": "vite",
 		"build": "vite build",
 		"postbuild": "node -e \"require('fs').rmSync('dist/feed.xml', { recursive: true, force: true })\"",
-		"preview": "vite preview"
+		"preview": "vite preview",
+		"lint": "eslint .",
+		"test": "vitest run"
 	},
 	"dependencies": {
 		"@supabase/supabase-js": "^2.99.1",
@@ -17,11 +19,18 @@
 		"vite-plugin-markdown": "^2.2.0"
 	},
 	"devDependencies": {
+		"@eslint/js": "^10.0.1",
 		"@preact/preset-vite": "^2.10.2",
 		"@tailwindcss/typography": "^0.5.19",
+		"@testing-library/preact": "^3.2.4",
 		"autoprefixer": "^10.4.27",
+		"eslint": "^10.7.0",
+		"eslint-plugin-react-hooks": "^7.1.1",
+		"globals": "^17.7.0",
+		"jsdom": "^29.1.1",
 		"postcss": "^8.5.8",
 		"tailwindcss": "^4.2.1",
-		"vite": "^7.0.4"
+		"vite": "^7.0.4",
+		"vitest": "^4.1.10"
 	}
 }

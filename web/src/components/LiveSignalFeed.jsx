@@ -11,7 +11,7 @@ const POOL_SIZE = 8;
 const VISIBLE = 4;
 const ROTATE_MS = 6000;
 
-function colorForApp(name) {
+export function colorForApp(name) {
   let hash = 0;
   for (let i = 0; i < name.length; i++) {
     hash = (hash * 31 + name.charCodeAt(i)) | 0;
@@ -19,7 +19,7 @@ function colorForApp(name) {
   return COLORS[Math.abs(hash) % COLORS.length];
 }
 
-function timeAgo(dateStr) {
+export function timeAgo(dateStr) {
   if (!dateStr) return '';
   const then = new Date(dateStr).getTime();
   if (Number.isNaN(then)) return '';
