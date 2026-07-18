@@ -2,6 +2,10 @@ name: Deploy Preact Site
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "applications/**"
 
 jobs:
   build:
