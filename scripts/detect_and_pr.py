@@ -18,6 +18,7 @@ Permissions:
   - issues: write
 """
 
+import argparse
 import json
 import os
 import re
@@ -158,11 +159,20 @@ def run_checker(app: AppDef) -> Dict:
     except json.JSONDecodeError as e:
         raise RuntimeError(f"invalid checker output: {e}: {res.stdout[:500]}")
 
-def create_pr_for_app(app: AppDef, new_tag: str, ctx: Dict, base_branch: str) -> None:
+def create_pr_for_app(app: AppDef, new_tag: str, ctx: Dict, base_branch: str, dry_run: bool = False) -> None:
     """
     Update a single app file and create a PR with a dedicated branch.
     """
     branch = f"automation/update/{app.slug}/{new_tag}"
+
+    if dry_run:
+        info(
+            f"[dry-run] Would bump {app.name}: {app.release.get('latest_version')} -> {new_tag} "
+            f"on branch {branch} (source={ctx.get('source', '')}, "
+            f"notes={ctx.get('release_notes_url', '')})"
+        )
+        return
+
     if pr_exists(branch):
         info(f"PR already exists ({branch}), skipping.")
         return 0
@@ -220,14 +230,31 @@ def create_pr_for_app(app: AppDef, new_tag: str, ctx: Dict, base_branch: str) ->
         warn(f"Failed to create PR for {branch}: {e}")
 
 
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Run detection for all apps but skip git/gh writes (no branch, commit, push, PR, or issue creation).",
+    )
+    return parser.parse_args()
+
+
 def main() -> int:
+    args = parse_args()
+    dry_run = args.dry_run
+
     apps = load_app_defs()
 
     if not apps:
         info("No GitHub Releases-backed applications found.")
         return 0
 
-    base_branch = get_default_branch()
+    if dry_run:
+        info("Running in --dry-run mode: no branches, commits, pushes, PRs, or issues will be created.")
+        base_branch = DEFAULT_BASE
+    else:
+        base_branch = get_default_branch()
     info(f"Using base branch: {base_branch}")
 
     for app in apps:
@@ -239,7 +266,7 @@ def main() -> int:
                 if not new_tag:
                     warn(f"Detected update for {app.name}, but no tag provided in result.")
                     continue
-                create_pr_for_app(app, new_tag, result, base_branch)
+                create_pr_for_app(app, new_tag, result, base_branch, dry_run=dry_run)
             else:
                 info(f"No update for {app.name}: {result.get('reason', '')}")
         except Exception as e:
@@ -247,7 +274,11 @@ def main() -> int:
             errors.append(err)
             error(err)
 
-    if errors:
+    if errors and dry_run:
+        warn(f"{len(errors)} app(s) failed during dry-run detection:")
+        for e in errors:
+            warn(f"  - {e}")
+    elif errors:
         body = f"Errors were encountered during automated application version detection\n Automation ran: {datetime.now()}\n\n"
         body += "```\n"
         body += "\n".join(f"{e}" for e in errors)
