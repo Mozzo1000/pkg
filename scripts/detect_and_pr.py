@@ -9,7 +9,7 @@ Create PRs per application (one app per PR) when a new upstream version is detec
 - Collects errors across apps and opens a single issue if any errors occurred
 
 Requirements:
-  - Python 3.10+
+  - Python 3.12+
   - PyYAML
   - GitHub CLI (gh) authenticated (GH_TOKEN/GITHUB_TOKEN)
 Permissions:
