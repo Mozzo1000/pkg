@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'preact/hooks';
+import { useEffect, useRef, useState } from 'preact/hooks';
 import { Activity, Clock, Package } from 'lucide-preact';
 
 const COLORS = [
@@ -6,6 +6,10 @@ const COLORS = [
   'bg-emerald-600', 'bg-sky-500', 'bg-red-600', 'bg-indigo-600',
   'bg-pink-500', 'bg-amber-600',
 ];
+
+const POOL_SIZE = 8;
+const VISIBLE = 4;
+const ROTATE_MS = 6000;
 
 function colorForApp(name) {
   let hash = 0;
@@ -34,34 +38,57 @@ function timeAgo(dateStr) {
 }
 
 export function LiveSignalFeed() {
-  const [updates, setUpdates] = useState(null);
+  const [pool, setPool] = useState(null); // null = still loading
+  const [visible, setVisible] = useState([]);
   const [error, setError] = useState(false);
+  const cursorRef = useRef(0);
 
   useEffect(() => {
     fetch('/apps.json')
       .then((res) => res.json())
       .then((data) => {
-        const latest = [...data]
+        const recent = [...data]
           .filter((app) => app.released_on)
           .sort((a, b) => new Date(b.released_on) - new Date(a.released_on))
-          .slice(0, 4)
+          .slice(0, POOL_SIZE)
           .map((app) => ({
-            id: app.name,
             app: app.name,
             version: app.latest_version,
-            time: timeAgo(app.released_on),
+            releasedOn: app.released_on,
             color: colorForApp(app.name),
           }));
-        setUpdates(latest);
+
+        setPool(recent);
+        cursorRef.current = Math.min(VISIBLE, recent.length) - 1;
+        setVisible(
+          recent.slice(0, VISIBLE).map((item, i) => ({ ...item, id: `init-${i}-${item.app}` }))
+        );
       })
       .catch((err) => {
         console.error('Failed to load recent updates:', err);
         setError(true);
-        setUpdates([]);
+        setPool([]);
       });
   }, []);
 
-  const loading = updates === null;
+  // Cycle through the real recent-releases pool so the feed keeps "flowing"
+  // without inventing any data — every entry shown is a real app/version.
+  useEffect(() => {
+    if (!pool || pool.length <= VISIBLE) return;
+
+    const interval = setInterval(() => {
+      cursorRef.current = (cursorRef.current + 1) % pool.length;
+      const next = pool[cursorRef.current];
+      setVisible((prev) => [
+        { ...next, id: `${next.app}-${Date.now()}` },
+        ...prev.slice(0, VISIBLE - 1),
+      ]);
+    }, ROTATE_MS);
+
+    return () => clearInterval(interval);
+  }, [pool]);
+
+  const loading = pool === null;
 
   return (
     <div className="p-6 rounded-lg border border-slate-200 bg-slate-50/50 dark:border-slate-800 dark:bg-slate-900/30 transition-colors">
@@ -74,12 +101,12 @@ export function LiveSignalFeed() {
 
       <div className="relative flex flex-col gap-3 min-h-85">
         {loading ? (
-          Array.from({ length: 4 }).map((_, i) => <SignalRowSkeleton key={i} />)
-        ) : updates.length > 0 ? (
-          updates.map((update) => (
+          Array.from({ length: VISIBLE }).map((_, i) => <SignalRowSkeleton key={i} />)
+        ) : visible.length > 0 ? (
+          visible.map((update, index) => (
             <div
               key={update.id}
-              className="group flex items-center justify-between p-4 rounded border border-slate-200 bg-white dark:bg-slate-950 dark:border-slate-800 transition-all duration-500 shadow-sm"
+              className="group flex items-center justify-between p-4 rounded border border-slate-200 bg-white dark:bg-slate-950 dark:border-slate-800 animate-signal-flow transition-all duration-500 shadow-sm"
             >
               <div className="flex items-center gap-4">
                 <div className={`w-1.5 h-8 rounded-full ${update.color} opacity-80 group-hover:opacity-100 transition-opacity`}></div>
@@ -95,9 +122,9 @@ export function LiveSignalFeed() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-1 text-[10px] font-bold font-mono px-2 py-1 rounded bg-slate-100 dark:bg-slate-900 text-slate-400">
+              <div className={`flex items-center gap-1 text-[10px] font-bold font-mono px-2 py-1 rounded bg-slate-100 dark:bg-slate-900 ${index === 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400'}`}>
                 <Clock size={10} className="opacity-60" />
-                {update.time}
+                {timeAgo(update.releasedOn)}
               </div>
             </div>
           ))
