@@ -2,7 +2,7 @@ name: Deploy Preact Site
 
 on:
   workflow_dispatch:
-  
+
 jobs:
   build:
     name: Build Preact Site
@@ -25,9 +25,11 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+          cache: pip
+          cache-dependency-path: scripts/requirements.txt
 
       - name: Install Python Dependencies
-        run: pip install PyYAML
+        run: pip install -r scripts/requirements.txt
 
       - name: Build Preact Site
         env:
