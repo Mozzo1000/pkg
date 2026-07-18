@@ -11,6 +11,10 @@ Features:
 - Tag regex filtering
 - Prefix/suffix stripping
 - GitHub Actions output support
+- Detects GitHub API rate-limit responses (403/429 with
+  X-RateLimit-Remaining: 0) and exits with a clear message (exit code 2)
+  instead of a generic HTTP traceback; retries transient 5xx responses
+  with exponential backoff
 
 Environment:
   GITHUB_TOKEN or GH_TOKEN recommended to avoid rate limits
@@ -21,8 +25,15 @@ import json
 import os
 import re
 import sys
+import time
+import urllib.error
 import urllib.request
 from typing import Dict, List, Optional, Tuple
+
+
+class RateLimitError(RuntimeError):
+    """Raised when the GitHub API reports we're rate-limited."""
+
 
 def github_headers() -> Dict[str, str]:
     token = os.getenv("GITHUB_TOKEN") or os.getenv("GH_TOKEN")
@@ -35,12 +46,41 @@ def github_headers() -> Dict[str, str]:
     return headers
 
 
-def http_get_json(url: str) -> Tuple[object, Dict[str, str]]:
-    req = urllib.request.Request(url, headers=github_headers())
-    with urllib.request.urlopen(req, timeout=30) as resp:
-        data = json.loads(resp.read().decode("utf-8"))
-        headers = dict(resp.headers)
-        return data, headers
+def _rate_limit_message(headers: Dict[str, str]) -> Optional[str]:
+    remaining = headers.get("X-RateLimit-Remaining")
+    if remaining != "0":
+        return None
+
+    reset = headers.get("X-RateLimit-Reset")
+    if reset:
+        try:
+            wait_s = max(0, int(reset) - int(time.time()))
+            return f"GitHub API rate limit exceeded; resets in {wait_s}s"
+        except ValueError:
+            pass
+    return "GitHub API rate limit exceeded"
+
+
+def http_get_json(url: str, retries: int = 3) -> Tuple[object, Dict[str, str]]:
+    attempt = 0
+    while True:
+        req = urllib.request.Request(url, headers=github_headers())
+        try:
+            with urllib.request.urlopen(req, timeout=30) as resp:
+                data = json.loads(resp.read().decode("utf-8"))
+                headers = dict(resp.headers)
+                return data, headers
+        except urllib.error.HTTPError as e:
+            headers = dict(e.headers or {})
+            if e.code in (403, 429):
+                msg = _rate_limit_message(headers)
+                if msg:
+                    raise RateLimitError(msg) from e
+            if e.code >= 500 and attempt < retries:
+                attempt += 1
+                time.sleep(min(2 ** attempt, 10))
+                continue
+            raise
 
 
 def parse_next_link(link_header: str) -> Optional[str]:
@@ -122,6 +162,8 @@ def fetch_latest_stable_release(owner: str, repo: str) -> Optional[dict]:
     try:
         data, _ = http_get_json(url)
         return data
+    except RateLimitError:
+        raise
     except Exception:
         return None
 
@@ -217,59 +259,64 @@ def main() -> int:
 
     latest = None
 
-    if not include_prereleases:
-        candidate = fetch_latest_stable_release(args.owner, args.repo)
-        if candidate:
-            tag = candidate.get("tag_name", "")
-            if tag_matches(tag, args.tag_pattern):
-                latest = candidate
-                result["source"] = "releases/latest"
+    try:
+        if not include_prereleases:
+            candidate = fetch_latest_stable_release(args.owner, args.repo)
+            if candidate:
+                tag = candidate.get("tag_name", "")
+                if tag_matches(tag, args.tag_pattern):
+                    latest = candidate
+                    result["source"] = "releases/latest"
 
- 
-    if latest is None:
-        releases = fetch_all_pages(
-            f"https://api.github.com/repos/{args.owner}/{args.repo}/releases?per_page=100"
-        )
+        if latest is None:
+            releases = fetch_all_pages(
+                f"https://api.github.com/repos/{args.owner}/{args.repo}/releases?per_page=100"
+            )
 
-        releases = [
-            r for r in releases
-            if not r.get("draft")
-            and (include_prereleases or not r.get("prerelease"))
-        ]
+            releases = [
+                r for r in releases
+                if not r.get("draft")
+                and (include_prereleases or not r.get("prerelease"))
+            ]
 
-        latest = select_latest(
-            releases,
-            tag_field="tag_name",
-            strip_prefix=args.strip_prefix,
-            strip_suffixes=args.strip_suffix,
-            tag_pattern=args.tag_pattern,
-            scheme=args.version_scheme,
-        )
+            latest = select_latest(
+                releases,
+                tag_field="tag_name",
+                strip_prefix=args.strip_prefix,
+                strip_suffixes=args.strip_suffix,
+                tag_pattern=args.tag_pattern,
+                scheme=args.version_scheme,
+            )
 
-        if latest:
-            result["source"] = "releases"
+            if latest:
+                result["source"] = "releases"
 
-    if latest is None:
-        tags = fetch_all_pages(
-            f"https://api.github.com/repos/{args.owner}/{args.repo}/tags?per_page=100"
-        )
+        if latest is None:
+            tags = fetch_all_pages(
+                f"https://api.github.com/repos/{args.owner}/{args.repo}/tags?per_page=100"
+            )
 
-        latest = select_latest(
-            tags,
-            tag_field="name",
-            strip_prefix=args.strip_prefix,
-            strip_suffixes=args.strip_suffix,
-            tag_pattern=args.tag_pattern,
-            scheme=args.version_scheme,
-        )
+            latest = select_latest(
+                tags,
+                tag_field="name",
+                strip_prefix=args.strip_prefix,
+                strip_suffixes=args.strip_suffix,
+                tag_pattern=args.tag_pattern,
+                scheme=args.version_scheme,
+            )
 
-        if latest:
-            result["source"] = "tags"
-            latest = {
-                "tag_name": latest["name"],
-                "html_url": f"https://github.com/{args.owner}/{args.repo}/releases/tag/{latest['name']}",
-                "published_at": "",
-            }
+            if latest:
+                result["source"] = "tags"
+                latest = {
+                    "tag_name": latest["name"],
+                    "html_url": f"https://github.com/{args.owner}/{args.repo}/releases/tag/{latest['name']}",
+                    "published_at": "",
+                }
+    except RateLimitError as e:
+        result["reason"] = str(e)
+        print(json.dumps(result, indent=2))
+        write_github_output(result)
+        return 2
 
     if not latest:
         result["reason"] = "No qualifying release or tag found"
