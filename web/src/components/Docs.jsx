@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'preact/hooks';
-import { Menu, X, ChevronLeft, ChevronDown, Folder, FileText, BookOpen } from 'lucide-preact';
+import { Menu, X, ChevronDown, Folder, FileText, BookOpen } from 'lucide-preact';
 
 // Automatically find all .md files, including subfolders
 const docFiles = import.meta.glob('../docs/**/*.md', { eager: true });

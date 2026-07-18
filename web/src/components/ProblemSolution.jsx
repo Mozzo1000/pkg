@@ -1,4 +1,4 @@
-import { User, Mail, Eye, ArrowRight, Zap, Bell, Users } from "lucide-preact"
+import { User, Mail, Eye, Zap, Bell, Users } from "lucide-preact"
 
 export function ProblemSolution() {
   const journey = [

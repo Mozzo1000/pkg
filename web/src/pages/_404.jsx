@@ -1,4 +1,4 @@
-import { WifiOff, ArrowLeft, Home, Search } from 'lucide-preact';
+import { Home, Search } from 'lucide-preact';
 import { Button } from '../components/Button'; // Assuming you have the Button component we built
 
 export function NotFound() {
