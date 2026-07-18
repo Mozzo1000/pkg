@@ -5,7 +5,6 @@ platforms:
 - macos
 - linux
 - android
-
 metadata:
   homepage: https://rustdesk.com/
   release_notes: https://github.com/rustdesk/rustdesk/releases
@@ -18,8 +17,8 @@ update_source:
 versioning:
   scheme: semver
 release:
-  latest_version: 1.4.6
-  released_on: 2026-03-05
+  latest_version: 1.4.9
+  released_on: 2026-07-06
   breaking: false
   security: false
-  notes_url: https://github.com/rustdesk/rustdesk/releases/tag/1.4.6
+  notes_url: https://github.com/rustdesk/rustdesk/releases/tag/1.4.9
