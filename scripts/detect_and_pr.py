@@ -30,6 +30,9 @@ from typing import Dict, List
 import yaml
 from datetime import datetime
 
+from app_release import resolve_representative
+from github_releases import compare_versions
+
 REPO_ROOT = Path(__file__).resolve().parents[1]
 APPS_DIR = REPO_ROOT / "applications"
 CHECKER = REPO_ROOT / "scripts" / "github_releases.py"
@@ -133,12 +136,20 @@ def load_app_defs() -> List[AppDef]:
 
 
 def run_checker(app: AppDef) -> Dict:
+    scheme = app.versioning.get("scheme", "semver")
+    # Resolves release.platforms/architectures overrides (see
+    # docs/application_specs.md) down to a single current version to check
+    # against, for apps that don't set a top-level release.latest_version.
+    resolved = resolve_representative(
+        app.release,
+        compare_versions=lambda a, b: compare_versions(a, b, scheme),
+    )
     cmd = [
         sys.executable, str(CHECKER),
         "--owner", app.src["owner"],
         "--repo", app.src["repo"],
-        "--current-version", str(app.release.get("latest_version") or ""),
-        "--version-scheme", app.versioning.get("scheme", "semver"),
+        "--current-version", str(resolved.get("latest_version") or ""),
+        "--version-scheme", scheme,
     ]
     if app.src.get("include_prereleases"):
         cmd += ["--include-prereleases", "true"]
@@ -165,9 +176,15 @@ def create_pr_for_app(app: AppDef, new_tag: str, ctx: Dict, base_branch: str, dr
     """
     branch = f"automation/update/{app.slug}/{new_tag}"
 
+    scheme = app.versioning.get("scheme", "semver")
+    current_version = resolve_representative(
+        app.release,
+        compare_versions=lambda a, b: compare_versions(a, b, scheme),
+    ).get("latest_version")
+
     if dry_run:
         info(
-            f"[dry-run] Would bump {app.name}: {app.release.get('latest_version')} -> {new_tag} "
+            f"[dry-run] Would bump {app.name}: {current_version} -> {new_tag} "
             f"on branch {branch} (source={ctx.get('source', '')}, "
             f"notes={ctx.get('release_notes_url', '')})"
         )
@@ -177,12 +194,20 @@ def create_pr_for_app(app: AppDef, new_tag: str, ctx: Dict, base_branch: str, dr
         info(f"PR already exists ({branch}), skipping.")
         return 0
 
-    info(f"Creating PR for {app.name}: {app.release.get("latest_version")} → {new_tag} on {branch}")
+    info(f"Creating PR for {app.name}: {current_version} -> {new_tag} on {branch}")
 
     # 1) Create branch from base
     checkout_fresh_branch(base_branch, branch)
 
     # 2) Update YAML file
+    #
+    # Always write to the top-level release.latest_version, even for apps
+    # that only had release.platforms overrides set (no global version).
+    # Per docs/application_specs.md, per-platform/architecture entries are
+    # a human-curated snapshot; automation only tracks a single upstream
+    # version per repo, so bumping always targets (and, if absent,
+    # creates) the global field. Once set, resolve_representative() always
+    # prefers the global field over platform overrides going forward.
     data = load_yaml(app.file_path)
     data["release"]["latest_version"] = new_tag
     published_at = str(ctx.get('published_at') or "").split("T")[0]
@@ -205,7 +230,7 @@ def create_pr_for_app(app: AppDef, new_tag: str, ctx: Dict, base_branch: str, dr
     pr_body = [
         f"Automated detection of a new upstream version for **{app.name}**.",
         "",
-        f"- Old version: `{app.release.get("latest_version")}`",
+        f"- Old version: `{current_version}`",
         f"- New version: `{new_tag}`",
         f"- Source: `{ctx.get('source', '')}`",
         f"- Published at: `{ctx.get('published_at', '')}`",

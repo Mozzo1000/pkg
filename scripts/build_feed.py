@@ -16,9 +16,13 @@ Usage:
 YAML fields used:
   name: string                      # fallback: filename stem
   release:
-    latest_version: string          # vendor version string (required)
+    latest_version: string          # vendor version string; required unless platforms is used
     released_on: date               # optional; defaults to today if missing
     notes_url: string                # PREFERRED
+    platforms:                      # optional per-platform/architecture overrides;
+      ...                           # see docs/application_specs.md. When latest_version
+                                     # is unset, the highest version across all
+                                     # platform/architecture leaves is used.
   metadata:
     release_notes: string           # fallback if release.notes_url is missing
 """
@@ -33,6 +37,9 @@ from typing import List, Tuple, Optional
 
 import yaml
 import xml.etree.ElementTree as ET
+
+from app_release import resolve_representative
+from github_releases import compare_versions
 
 
 def iso_to_rfc2822(ts: dt.datetime) -> str:
@@ -65,8 +72,13 @@ def build_item_tuple(filepath: Path) -> Optional[Tuple[str, str, str, str, str]]
     if not data:
         return None
 
-    release = data.get("release") if isinstance(data.get("release"), dict) else {}
+    release_block = data.get("release") if isinstance(data.get("release"), dict) else {}
     metadata = data.get("metadata") if isinstance(data.get("metadata"), dict) else {}
+    scheme = ((data.get("versioning") or {}).get("scheme")) or "semver"
+    release = resolve_representative(
+        release_block,
+        compare_versions=lambda a, b: compare_versions(a, b, scheme),
+    )
 
     name = str(data.get("name") or filepath.stem).strip()
     current_version = str(release.get("latest_version") or "").strip()

@@ -1,4 +1,4 @@
-# Application YAML Specification — **Draft**
+# Application YAML Specification
 
 This document describes how to author `applications/<app>.yml` files so our automation can detect upstream versions.
 
@@ -118,6 +118,8 @@ The current, human‑curated snapshot of the latest known release for this appli
         *   **`notes_url`**: Optional per‑arch notes link overriding platform/global.
 
 **Consumer resolution order:** architecture → platform → global. The most specific scope available is used for version and notes.
+
+**Automation behavior:** `scripts/detect_and_pr.py`, `scripts/build_feed.py`, and `scripts/generate_json.py` all resolve a single representative release the same way: use the global `latest_version` if set; otherwise, use the highest version found across all `platforms`/`architectures` leaves (compared per `versioning.scheme`). `platforms`/`architectures` entries are a human-curated snapshot — the automated version checker only ever writes to the top-level `release.latest_version` (creating it if absent), never to a specific platform or architecture. Once an app has been auto-bumped, its global `latest_version` takes precedence over any `platforms` overrides going forward.
 
 ## Examples
 

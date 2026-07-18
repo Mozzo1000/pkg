@@ -8,6 +8,9 @@ import datetime
 
 import yaml
 
+from app_release import resolve_representative
+from github_releases import compare_versions
+
 def load_yaml(path: Path) -> Optional[Dict[str, Any]]:
     try:
         with path.open("r", encoding="utf-8") as f:
@@ -25,9 +28,16 @@ def collect_apps(apps_dir: Path, include_missing: bool) -> List[Dict[str, Any]]:
             continue
 
         name = str(y.get("name") or fp.stem).strip()
-        
-        # Extract the release block
-        release_info = y.get("release") if isinstance(y.get("release"), dict) else {}
+
+        # Extract the release block, resolving platforms/architectures
+        # overrides down to a single representative version (see
+        # docs/application_specs.md) when no global latest_version is set.
+        release_block = y.get("release") if isinstance(y.get("release"), dict) else {}
+        scheme = ((y.get("versioning") or {}).get("scheme")) or "semver"
+        release_info = resolve_representative(
+            release_block,
+            compare_versions=lambda a, b: compare_versions(a, b, scheme),
+        )
         version = str(release_info.get("latest_version") or "").strip()
 
         if not version and not include_missing:
@@ -52,8 +62,8 @@ def collect_apps(apps_dir: Path, include_missing: bool) -> List[Dict[str, Any]]:
             "released_on": released_on_str,
             "release_notes": notes_url,
             "metadata": metadata,
-            "security": release_info.get("security", False),
-            "breaking": release_info.get("breaking", False)
+            "security": bool(release_info.get("security")),
+            "breaking": bool(release_info.get("breaking"))
         })
     return items
 
