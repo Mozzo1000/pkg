@@ -131,9 +131,9 @@ python scripts/generate_json.py \
 | `--include-missing` | Include apps that have no `release.latest_version` set |
 | `--sort-by` | `name` or `current_version` — note: `current_version` is currently a no-op, since the emitted JSON field is actually named `latest_version` |
 
-To get a working `/apps.json` for local frontend development (`npm run dev`
-in `web/`), run this and copy the output into `web/public/apps.json`:
-
-```bash
-python scripts/generate_json.py --apps-dir applications --out web/public/apps.json --pretty
-```
+`npm run dev` in `web/` runs this automatically via a `predev` hook
+(`web/scripts/generate-dev-data.mjs`), writing straight to
+`web/public/apps.json` — no manual step needed for local frontend
+development. That hook shells out to whichever of `python`/`python3` is on
+your `PATH`; if neither works it just warns and lets `npm run dev` continue,
+so you can still run the command above manually if needed.

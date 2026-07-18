@@ -2,6 +2,7 @@
 	"private": true,
 	"type": "module",
 	"scripts": {
+		"predev": "node scripts/generate-dev-data.mjs",
 		"dev": "vite",
 		"build": "vite build",
 		"postbuild": "node -e \"require('fs').rmSync('dist/feed.xml', { recursive: true, force: true })\"",
