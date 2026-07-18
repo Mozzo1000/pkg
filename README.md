@@ -20,6 +20,8 @@
 
 PKG is a centralized registry for monitoring application releases. Designed to provide a clean, unified interface for tracking updates, security patches, and breaking changes across all software packages.
 
+Version detection and feed generation are handled by the Python utilities in [`scripts/`](scripts/README.md) — see that README for how to run each one locally.
+
 ## ✨ Features
 
 ## Roadmap
