@@ -5,7 +5,6 @@ platforms:
 - windows
 - macos
 - android
-
 metadata:
   homepage: https://logseq.com/
   release_notes: https://github.com/logseq/logseq/releases
@@ -18,8 +17,8 @@ update_source:
 versioning:
   scheme: semver
 release:
-  latest_version: 0.10.15
-  released_on: 2025-12-01
+  latest_version: 2.0.1
+  released_on: 2026-07-13
   breaking: false
   security: false
-  notes_url: https://github.com/logseq/logseq/releases/tag/0.10.15
+  notes_url: https://github.com/logseq/logseq/releases/tag/2.0.1
