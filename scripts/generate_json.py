@@ -9,7 +9,7 @@ import datetime
 import yaml
 
 from app_release import resolve_representative
-from github_releases import compare_versions
+from github_releases import compare_versions, normalize_version
 
 def load_yaml(path: Path) -> Optional[Dict[str, Any]]:
     try:
@@ -33,7 +33,8 @@ def collect_apps(apps_dir: Path, include_missing: bool) -> List[Dict[str, Any]]:
         # overrides down to a single representative version (see
         # docs/application_specs.md) when no global latest_version is set.
         release_block = y.get("release") if isinstance(y.get("release"), dict) else {}
-        scheme = ((y.get("versioning") or {}).get("scheme")) or "semver"
+        versioning = y.get("versioning") if isinstance(y.get("versioning"), dict) else {}
+        scheme = versioning.get("scheme") or "semver"
         release_info = resolve_representative(
             release_block,
             compare_versions=lambda a, b: compare_versions(a, b, scheme),
@@ -42,6 +43,16 @@ def collect_apps(apps_dir: Path, include_missing: bool) -> List[Dict[str, Any]]:
 
         if not version and not include_missing:
             continue
+
+        # Normalize the vendor-exact version (e.g. strip a "v" prefix) for
+        # display purposes. Per docs/application_specs.md, YAML stores
+        # vendor-exact strings; normalization happens at runtime here.
+        if version:
+            version = normalize_version(
+                version,
+                versioning.get("strip_prefix"),
+                versioning.get("strip_suffix"),
+            )
 
         # Handle Date serialization
         released_on = release_info.get("released_on")

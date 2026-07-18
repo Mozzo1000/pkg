@@ -89,11 +89,12 @@ Name of the application
 ### `versioning` *(object, required)*
 
 *   **`scheme`**: Comparison strategy. `semver` is recommended for `major.minor.patch`.
-*   **`strip_prefix`**: String removed **only during comparison** (e.g., `"v"` for `v1.2.3`).
-*   **`strip_suffix`**: List of regex end‑matches removed **only during comparison** (e.g., `"-stable"`, `"\+build\d+$"`).  
+*   **`strip_prefix`**: String removed **during comparison, and when rendering `apps.json`** (e.g., `"v"` for `v1.2.3`).
+*   **`strip_suffix`**: List of regex end‑matches removed **during comparison, and when rendering `apps.json`** (e.g., `"-stable"`, `"\+build\d+$"`).  
     **Detector behavior:**
 *   Parses the detected version and stored version under these rules; compares numerically for semver; treats stable > prerelease.
 *   Stored YAML values remain vendor‑exact.
+*   **`scripts/generate_json.py`** is the one consumer that re‑applies `strip_prefix`/`strip_suffix` to `latest_version` before writing it to `apps.json`, so the public feed shows the normalized version. `scripts/build_feed.py` and `scripts/detect_and_pr.py` keep the vendor‑exact string.
 
 ### `release` *(object, required)*
 The current, human‑curated snapshot of the latest known release for this application, including optional platform/architecture specializations, release metadata, and links.
