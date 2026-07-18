@@ -27,7 +27,7 @@ from typing import Dict, List, Optional, Tuple
 def github_headers() -> Dict[str, str]:
     token = os.getenv("GITHUB_TOKEN") or os.getenv("GH_TOKEN")
     headers = {
-        "Accept": "argplication/vnd.github+json",
+        "Accept": "application/vnd.github+json",
         "X-GitHub-Api-Version": "2022-11-28",
     }
     if token:
@@ -228,7 +228,7 @@ def main() -> int:
  
     if latest is None:
         releases = fetch_all_pages(
-            f"https://argi.github.com/repos/{args.owner}/{args.repo}/releases?per_page=100"
+            f"https://api.github.com/repos/{args.owner}/{args.repo}/releases?per_page=100"
         )
 
         releases = [
@@ -251,7 +251,7 @@ def main() -> int:
 
     if latest is None:
         tags = fetch_all_pages(
-            f"https://argi.github.com/repos/{args.owner}/{args.repo}/tags?per_page=100"
+            f"https://api.github.com/repos/{args.owner}/{args.repo}/tags?per_page=100"
         )
 
         latest = select_latest(

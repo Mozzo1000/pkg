@@ -136,7 +136,7 @@ def run_checker(app: AppDef) -> Dict:
         sys.executable, str(CHECKER),
         "--owner", app.src["owner"],
         "--repo", app.src["repo"],
-        "--current-version", app.release.get("latest_version"),
+        "--current-version", str(app.release.get("latest_version") or ""),
         "--version-scheme", app.versioning.get("scheme", "semver"),
     ]
     if app.src.get("include_prereleases"):
@@ -175,7 +175,10 @@ def create_pr_for_app(app: AppDef, new_tag: str, ctx: Dict, base_branch: str) ->
     # 2) Update YAML file
     data = load_yaml(app.file_path)
     data["release"]["latest_version"] = new_tag
-    data["release"]["released_on"] = datetime.fromisoformat(str(ctx.get('published_at', '')).split("T")[0]).date()
+    published_at = str(ctx.get('published_at') or "").split("T")[0]
+    data["release"]["released_on"] = (
+        datetime.fromisoformat(published_at).date() if published_at else datetime.now().date()
+    )
     data["release"]["notes_url"] = ctx.get('release_notes_url', '')
     save_yaml(app.file_path, data)
 
@@ -259,8 +262,7 @@ def main() -> int:
         except Exception as e:
             warn(f"Could not file Issue for errors: {e}")
 
-    # Return success even if some apps failed
-    return 0
+    return 1 if errors else 0
 
 
 if __name__ == "__main__":
