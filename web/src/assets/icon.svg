@@ -1,41 +1,29 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Created with Inkscape (http://www.inkscape.org/) -->
-
+<!-- PKG icon: isometric package/box mark with an "update available" chevron badge -->
 <svg
-   width="11.253281mm"
-   height="9.4460373mm"
-   viewBox="0 0 11.253281 9.4460373"
+   width="100"
+   height="90"
+   viewBox="0 0 100 90"
    version="1.1"
    id="svg5"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg">
-  <sodipodi:namedview
-     id="namedview7"
-     pagecolor="#ffffff"
-     bordercolor="#000000"
-     borderopacity="0.25"
-     inkscape:showpageshadow="2"
-     inkscape:pageopacity="0.0"
-     inkscape:pagecheckerboard="0"
-     inkscape:deskcolor="#d1d1d1"
-     inkscape:document-units="mm"
-     showgrid="false" />
-  <defs
-     id="defs2" />
+   xmlns="http://www.w3.org/2000/svg">
   <g
-     inkscape:label="Layer 1"
-     inkscape:groupmode="layer"
-     id="layer1"
-     transform="translate(-60.422243,-46.218428)">
-    <rect
-       style="fill:none;stroke:#000000;stroke-width:0.569314;stroke-dasharray:none;stroke-opacity:1"
-       id="rect1777-6"
-       width="8.8371115"
-       height="9.0555744"
-       x="71.590233"
-       y="47.378193"
-       transform="matrix(1,0,-0.19188356,0.9814177,0,0)" />
+     id="mark"
+     fill="none"
+     stroke="currentColor"
+     stroke-width="5"
+     stroke-linejoin="round"
+     stroke-linecap="round">
+    <!-- isometric cube = package -->
+    <path
+       id="cube-outline"
+       d="M 50,20 L 74.25,34 L 74.25,62 L 50,76 L 25.75,62 L 25.75,34 Z" />
+    <path
+       id="cube-edges"
+       d="M 50,48 L 50,20 M 50,48 L 74.25,62 M 50,48 L 25.75,62" />
+    <!-- update-available chevron -->
+    <path
+       id="badge-chevron"
+       d="M 78,24 L 84,18 L 90,24" />
   </g>
 </svg>
