@@ -129,7 +129,7 @@ python scripts/generate_json.py \
 | `--out` | Write JSON to this file (omit to print to stdout) |
 | `--pretty` | Pretty-print the JSON output |
 | `--include-missing` | Include apps that have no `release.latest_version` set |
-| `--sort-by` | `name` or `current_version` — note: `current_version` is currently a no-op, since the emitted JSON field is actually named `latest_version` |
+| `--sort-by` | `name` or `latest_version` |
 
 `npm run dev` in `web/` runs this automatically via a `predev` hook
 (`web/scripts/generate-dev-data.mjs`), writing straight to

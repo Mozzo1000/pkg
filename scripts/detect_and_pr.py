@@ -31,16 +31,16 @@ import yaml
 from datetime import datetime
 
 from app_release import resolve_representative
-from github_releases import compare_versions
+from github_releases import check_update, compare_versions
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 APPS_DIR = REPO_ROOT / "applications"
-CHECKER = REPO_ROOT / "scripts" / "github_releases.py"
 
 DEFAULT_BASE = os.getenv("DEFAULT_BASE_BRANCH", "main")
+DEFAULT_TIMEOUT = 60
 errors: List[str] = []
 
-def run(cmd: List[str], check=True, capture=True, env=None) -> subprocess.CompletedProcess:
+def run(cmd: List[str], check=True, capture=True, env=None, timeout=DEFAULT_TIMEOUT) -> subprocess.CompletedProcess:
     """Run a command with sane defaults, capturing stdout/stderr."""
     return subprocess.run(
         cmd,
@@ -49,6 +49,7 @@ def run(cmd: List[str], check=True, capture=True, env=None) -> subprocess.Comple
         text=True,
         env=env or os.environ.copy(),
         cwd=str(REPO_ROOT),
+        timeout=timeout,
     )
 
 def info(msg: str):
@@ -135,52 +136,44 @@ def load_app_defs() -> List[AppDef]:
     return apps
 
 
-def run_checker(app: AppDef) -> Dict:
+def resolve_current(app: AppDef) -> Dict:
+    """Resolves release.platforms/architectures overrides (see
+    docs/application_specs.md) down to a single current version to check
+    against, for apps that don't set a top-level release.latest_version."""
     scheme = app.versioning.get("scheme", "semver")
-    # Resolves release.platforms/architectures overrides (see
-    # docs/application_specs.md) down to a single current version to check
-    # against, for apps that don't set a top-level release.latest_version.
-    resolved = resolve_representative(
+    return resolve_representative(
         app.release,
         compare_versions=lambda a, b: compare_versions(a, b, scheme),
     )
-    cmd = [
-        sys.executable, str(CHECKER),
-        "--owner", app.src["owner"],
-        "--repo", app.src["repo"],
-        "--current-version", str(resolved.get("latest_version") or ""),
-        "--version-scheme", scheme,
-    ]
-    if app.src.get("include_prereleases"):
-        cmd += ["--include-prereleases", "true"]
-    if app.src.get("tag_pattern"):
-        cmd += ["--tag-pattern", app.src["tag_pattern"]]
-    if app.versioning.get("strip_prefix"):
-        cmd += ["--strip-prefix", app.versioning["strip_prefix"]]
-    for suf in app.versioning.get("strip_suffix", []) or []:
-        cmd += ["--strip-suffix", suf]
 
-    res = run(cmd, check=False)
-    if res.returncode != 0:
-        err = f"{app.file_path.name}: {res.stderr.strip() or res.stdout.strip()}"
+def run_checker(app: AppDef, resolved: Dict) -> Dict:
+    scheme = app.versioning.get("scheme", "semver")
+    result, code = check_update(
+        owner=app.src["owner"],
+        repo=app.src["repo"],
+        current_version=str(resolved.get("latest_version") or ""),
+        include_prereleases=bool(app.src.get("include_prereleases")),
+        tag_pattern=app.src.get("tag_pattern"),
+        strip_prefix=app.versioning.get("strip_prefix"),
+        strip_suffix=app.versioning.get("strip_suffix") or None,
+        version_scheme=scheme,
+    )
+    if code != 0:
+        err = f"{app.file_path.name}: {result.get('reason', 'checker failed')}"
         errors.append(err)
-        raise RuntimeError(f"checker failed: {res.stderr.strip() or res.stdout.strip()}")
-    try:
-        return json.loads(res.stdout or "{}")
-    except json.JSONDecodeError as e:
-        raise RuntimeError(f"invalid checker output: {e}: {res.stdout[:500]}")
+        raise RuntimeError(err)
+    return result
 
-def create_pr_for_app(app: AppDef, new_tag: str, ctx: Dict, base_branch: str, dry_run: bool = False) -> None:
+def create_pr_for_app(app: AppDef, new_tag: str, ctx: Dict, base_branch: str, current_version: str, dry_run: bool = False) -> None:
     """
     Update a single app file and create a PR with a dedicated branch.
     """
-    branch = f"automation/update/{app.slug}/{new_tag}"
-
-    scheme = app.versioning.get("scheme", "semver")
-    current_version = resolve_representative(
-        app.release,
-        compare_versions=lambda a, b: compare_versions(a, b, scheme),
-    ).get("latest_version")
+    # The upstream tag is untrusted (it comes straight from the release's
+    # repo) and can contain characters git branch names disallow, or a
+    # leading "-" that some git subcommands can misparse as a flag. Slugify
+    # it for the branch name only; the raw tag is still used for the YAML
+    # value, commit message, and PR body, where it's just data.
+    branch = f"automation/update/{app.slug}/{slugify(new_tag)}"
 
     if dry_run:
         info(
@@ -192,7 +185,7 @@ def create_pr_for_app(app: AppDef, new_tag: str, ctx: Dict, base_branch: str, dr
 
     if pr_exists(branch):
         info(f"PR already exists ({branch}), skipping.")
-        return 0
+        return
 
     info(f"Creating PR for {app.name}: {current_version} -> {new_tag} on {branch}")
 
@@ -220,8 +213,13 @@ def create_pr_for_app(app: AppDef, new_tag: str, ctx: Dict, base_branch: str, dr
     # 3) Commit
     commit_title = f"chore({app.slug}): bump {app.name} to {new_tag}"
     run(["git", "add", str(app.file_path.relative_to(REPO_ROOT))])
-    commit_msg = commit_title
-    run(["git", "commit", "-m", commit_msg], check=False)
+    commit_res = run(["git", "commit", "-m", commit_title], check=False)
+    if commit_res.returncode != 0:
+        warn(
+            f"Nothing to commit for {app.name} on {branch}, skipping push/PR: "
+            f"{commit_res.stderr.strip() or commit_res.stdout.strip()}"
+        )
+        return
 
     # 4) Push branch
     push_branch(branch)
@@ -285,13 +283,15 @@ def main() -> int:
     for app in apps:
         info(f"Checking {app.name} ({app.file_path.name}) ...")
         try:
-            result = run_checker(app)
+            resolved = resolve_current(app)
+            result = run_checker(app, resolved)
             if result.get("found") == "true":
                 new_tag = result.get("new_version") or result.get("new_tag")
                 if not new_tag:
                     warn(f"Detected update for {app.name}, but no tag provided in result.")
                     continue
-                create_pr_for_app(app, new_tag, result, base_branch, dry_run=dry_run)
+                current_version = resolved.get("latest_version")
+                create_pr_for_app(app, new_tag, result, base_branch, current_version, dry_run=dry_run)
             else:
                 info(f"No update for {app.name}: {result.get('reason', '')}")
         except Exception as e:

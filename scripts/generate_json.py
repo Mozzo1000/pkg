@@ -84,7 +84,7 @@ def main() -> int:
     ap.add_argument("--out", help="Write JSON to this file.")
     ap.add_argument("--pretty", action="store_true", help="Pretty-print JSON.")
     ap.add_argument("--include-missing", action="store_true", help="Include apps missing version.")
-    ap.add_argument("--sort-by", choices=["name", "current_version"], help="Sort output.")
+    ap.add_argument("--sort-by", choices=["name", "latest_version"], help="Sort output.")
     args = ap.parse_args()
 
     apps_dir = Path(args.apps_dir)
