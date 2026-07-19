@@ -14,8 +14,8 @@ update_source:
 versioning:
   scheme: semver
 release:
-  latest_version: 1.14.0
-  released_on: 2026-07-02
+  latest_version: 1.15.0
+  released_on: 2026-07-19
   breaking: false
   security: false
-  notes_url: https://github.com/fosrl/newt/releases/tag/1.14.0
+  notes_url: https://github.com/fosrl/newt/releases/tag/1.15.0
