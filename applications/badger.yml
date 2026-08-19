@@ -15,8 +15,8 @@ metadata:
   homepage: https://pangolin.net/
   release_notes: https://github.com/fosrl/badger/releases
 release:
-  latest_version: v1.5.0
-  released_on: 2026-07-17
+  latest_version: v1.6.1
+  released_on: 2026-08-19
   breaking: false
   security: false
-  notes_url: https://github.com/fosrl/badger/releases/tag/v1.5.0
+  notes_url: https://github.com/fosrl/badger/releases/tag/v1.6.1
