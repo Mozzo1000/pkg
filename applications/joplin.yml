@@ -17,8 +17,8 @@ metadata:
   homepage: https://joplinapp.org/
   release_notes: https://github.com/laurent22/joplin/releases
 release:
-  latest_version: v3.6.15
-  released_on: 2026-06-20
+  latest_version: v3.6.16
+  released_on: 2026-08-20
   breaking: false
   security: false
-  notes_url: https://github.com/laurent22/joplin/releases/tag/v3.6.15
+  notes_url: https://github.com/laurent22/joplin/releases/tag/v3.6.16
