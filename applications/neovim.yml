@@ -17,8 +17,8 @@ versioning:
   scheme: semver
   strip_prefix: v
 release:
-  latest_version: v0.12.4
-  released_on: 2026-07-05
+  latest_version: v0.12.5
+  released_on: 2026-08-23
   breaking: false
   security: false
-  notes_url: https://github.com/neovim/neovim/releases/tag/v0.12.4
+  notes_url: https://github.com/neovim/neovim/releases/tag/v0.12.5
