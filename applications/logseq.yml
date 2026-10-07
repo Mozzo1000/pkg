@@ -17,8 +17,8 @@ update_source:
 versioning:
   scheme: semver
 release:
-  latest_version: 2.0.1
-  released_on: 2026-07-13
+  latest_version: 2.0.2
+  released_on: 2026-10-07
   breaking: false
   security: false
-  notes_url: https://github.com/logseq/logseq/releases/tag/2.0.1
+  notes_url: https://github.com/logseq/logseq/releases/tag/2.0.2
