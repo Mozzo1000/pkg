@@ -15,8 +15,8 @@ versioning:
   scheme: semver
   strip_prefix: v
 release:
-  latest_version: v1.3.315
-  released_on: 2026-03-20
+  latest_version: v1.3.328
+  released_on: 2026-10-19
   breaking: false
   security: true
-  notes_url: https://github.com/greenshot/greenshot/releases/tag/v1.3.315
+  notes_url: https://github.com/greenshot/greenshot/releases/tag/v1.3.328
