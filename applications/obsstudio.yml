@@ -16,8 +16,8 @@ update_source:
 versioning:
   scheme: semver
 release:
-  latest_version: 32.2.2
-  released_on: 2026-08-14
+  latest_version: 33.0.1
+  released_on: 2026-10-29
   breaking: false
   security: false
-  notes_url: https://github.com/obsproject/obs-studio/releases/tag/32.2.2
+  notes_url: https://github.com/obsproject/obs-studio/releases/tag/33.0.1
