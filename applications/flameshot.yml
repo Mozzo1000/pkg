@@ -17,8 +17,8 @@ metadata:
   homepage: https://flameshot.org
   release_notes: https://github.com/flameshot-org/flameshot/releases
 release:
-  latest_version: v14.0.0
-  released_on: 2026-06-19
+  latest_version: v15.0.0
+  released_on: 2026-11-07
   breaking: false
   security: false
-  notes_url: https://github.com/flameshot-org/flameshot/releases/tag/v14.0.0
+  notes_url: https://github.com/flameshot-org/flameshot/releases/tag/v15.0.0
